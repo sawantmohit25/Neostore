@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:neostore_app/Screens/forgot_password.dart';
 import 'package:neostore_app/Screens/register.dart';
+import 'package:neostore_app/Screens/home_screen.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -44,7 +46,11 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: myHexColor,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(),
-        onPressed: () => {},
+        onPressed: () => {
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterScreen()))
+        },
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -124,7 +130,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             "LOGIN",
                             style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if(_formKey.currentState.validate()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomeScreen()));
+                            }
+                          },
                           color: Colors.white,
                           textColor: Colors.red,
                           splashColor: Colors.red,
@@ -134,10 +146,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 21.0),
-                      Text('Forgot Password?', style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 18.0),),
+                      RichText(
+                        text: TextSpan(
+                          style:TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18.0) ,
+                          text: 'Forgot Password?',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ForgotPassword()));
+                            }
+
+                        ),
+                      )
+                      // Text('Forgot Password?', style: TextStyle(
+                      //     fontWeight: FontWeight.bold,
+                      //     color: Colors.white,
+                      //     fontSize: 18.0),),
                     ],
                   ),
                 ) ,
@@ -151,14 +179,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.white,
                     fontSize: 18.0) ,
                   text: 'DONT HAVE AN ACCOUNT?',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      setState(() {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RegisterScreen()));
-                      });
-                    }
               ),
             ))
           ],

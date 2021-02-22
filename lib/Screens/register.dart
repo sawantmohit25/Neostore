@@ -22,6 +22,7 @@ Future<UserModel> postData(String firstName,String lastName,String email,String 
   }
   else{
     print('NULL value passing');
+    print(response.statusCode);
     return null;
   }
 }
