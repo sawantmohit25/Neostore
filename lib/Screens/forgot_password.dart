@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:neostore_app/Screens/login.dart';
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -68,10 +70,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               "SUBMIT",
                               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                             ),
-                            onPressed: () {
+                            onPressed: () async{
                               if(_formKey.currentState.validate()) {
-                              Navigator.pop(context);
-                            }
+                                final String email=userName.text;
+                                Future postData(String email) async {
+                                  final String url = 'http://staging.php-dev.in:8844/trainingapp/api/users/forgot';
+                                  final response = await http.post(url, body: {
+                                    "email": email,
+                                  });
+                                  if(response.statusCode==200){
+                                    print(response.statusCode);
+                                    print(response.body);
+                                    print(email);
+                                    Navigator.of(context).pop(
+
+                                    );
+                                  }
+                                  if(response.statusCode==401){
+                                    print('NULL value passing');
+                                    print(response.statusCode);
+                                    return null;
+                                  }
+                                }
+                                postData(email);
+                              }
                             },
                             color: Colors.white,
                             textColor: Colors.red,

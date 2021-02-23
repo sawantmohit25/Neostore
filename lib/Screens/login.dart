@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:neostore_app/Screens/forgot_password.dart';
 import 'package:neostore_app/Screens/register.dart';
 import 'package:neostore_app/Screens/home_screen.dart';
+import 'package:neostore_app/usermodel.dart';
+import 'dart:convert';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends State<LoginScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
   final _formKey = GlobalKey<FormState>();
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController userName = TextEditingController();
   TextEditingController password = TextEditingController();
   bool hiddenValue=true;
@@ -30,15 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
     if (val.isEmpty) {
       return 'Required';
     }
-    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(val)) //Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char
-        {
-      return 'Please Enter A valid Password';
-    }
+    // if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(val)) //Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char
+    //     {
+    //   return 'Please Enter A valid Password';
+    // }
     return null;
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor:myHexColor1,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,size:48.0 ),
@@ -130,11 +134,47 @@ class _LoginScreenState extends State<LoginScreen> {
                             "LOGIN",
                             style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () {
+                          onPressed: ()async{
                             if(_formKey.currentState.validate()) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomeScreen()));
+                              final String email=userName.text;
+                              final String pass=password.text;
+                              Future postData(String email,String password) async {
+                                final String url = 'http://staging.php-dev.in:8844/trainingapp/api/users/login';
+                                final response = await http.post(url, body: {
+                                  "email": email,
+                                  "password": password,
+                                });
+                                if(response.statusCode==200){
+                                  print(response.statusCode);
+                                  print(email);
+                                  var success =ResponseModel.fromJson(json.decode(response.body));
+                                  print(success.userMsg);
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content:Text(success.userMsg),
+                                        backgroundColor: Colors.blue,
+                                      )
+                                  );
+                                //  await Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(builder: (context) => HomeScreen()));
+                                //
+                                  }
+                                if(response.statusCode==401){
+                                 var error =ErrorModel.fromJson(json.decode(response.body));
+                                 print(error.userMsg);
+                                  _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content:Text(error.userMsg),
+                                        backgroundColor: Colors.blue,
+                                        duration:Duration(seconds: 2),
+                                      )
+                                  );
+                                  print(response.statusCode);
+                                  return null;
+                                }
+                              }
+                              postData(email, pass);
                             }
                           },
                           color: Colors.white,

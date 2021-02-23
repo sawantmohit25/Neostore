@@ -43,3 +43,58 @@ class UserModel {
     "phone_no": phoneNo,
   };
 }
+class ErrorModel {
+  String message;
+  String userMsg;
+
+  ErrorModel({this.message, this.userMsg});
+
+  ErrorModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    userMsg = json['user_msg'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['user_msg'] = this.userMsg;
+    return data;
+  }
+}
+class ResponseModel {
+  String message;
+  String userMsg;
+
+  ResponseModel({this.message, this.userMsg});
+
+  ResponseModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    userMsg = json['user_msg'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['user_msg'] = this.userMsg;
+    return data;
+  }
+}
+class RegisterModel {
+  String message;
+  String userMsg;
+
+  RegisterModel({this.message, this.userMsg});
+
+  RegisterModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    userMsg = json['user_msg'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['user_msg'] = this.userMsg;
+    return data;
+  }
+}
+

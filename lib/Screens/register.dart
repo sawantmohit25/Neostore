@@ -9,16 +9,17 @@ class RegisterScreen extends StatefulWidget {
 Future<UserModel> postData(String firstName,String lastName,String email,String password,String confirmPassword,String gender,String phoneNo) async{
   final String url= 'http://staging.php-dev.in:8844/trainingapp/api/users/register';
   final response = await http.post(url,body :{
-    "firstName": firstName,
-    "lastName":lastName,
+    "first_name": firstName,
+    "last_name":lastName,
     "email":email,
     "password":password,
-    "confirmPassword":confirmPassword,
+    "confirm_password":confirmPassword,
     "gender":gender,
-    "phoneNo":phoneNo
+    "phone_no":phoneNo
   });
   if(response.statusCode==200){
-    return userModelFromJson(response.body);
+    print(response.statusCode);
+  return userModelFromJson(response.body);
   }
   else{
     print('NULL value passing');
@@ -259,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             disabledColor: Colors.white
                         ),
                         child: Radio(
-                          value: 'Male',
+                          value: 'M',
                           groupValue: gender1,
                           activeColor: Colors.white,
                           onChanged: (val) {
@@ -281,7 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             disabledColor: Colors.white
                         ),
                         child: Radio(
-                          value: 'Female',
+                          value: 'F',
                           groupValue:gender1,
                           activeColor: Colors.white,
                           onChanged: (val) {
@@ -380,11 +381,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   final String confirmPassword=confirmPasswordContr.text;
                                   final String gender=gender1;
                                   final String phoneNo=phoneNoContr.text;
-                                  final UserModel user =await postData(firstName,lastName,email,password,confirmPassword,gender,phoneNo);
-                                  setState(() {
-                                    _user=user;
-                                  });
-                                  print(_user.firstName);
+                                  UserModel user =await postData(firstName,lastName,email,password,confirmPassword,gender,phoneNo);
+                                  // setState(() {
+                                  //   _user=user;
+                                  //   print(_user.firstName);
+                                  // });
+                                  //print(_user.firstName);
+                                  print(user.firstName);
+                                  Navigator.pop(context);
                                   }
                             }
                         },

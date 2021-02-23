@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.weekend,color: Colors.white,), title: Text("Cupboards",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.table_chart_sharp,color: Colors.white,), title: Text("Cupboards",style: TextStyle(color: Colors.white),),
                 onTap: () {
                   Navigator.pop(context);
                 },
