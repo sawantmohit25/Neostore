@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:neostore_app/Screens/login.dart';
+import 'package:neostore_app/usermodel.dart';
+import 'dart:convert';
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -10,6 +12,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
   final _formKey = GlobalKey<FormState>();
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController userName = TextEditingController();
   String validateUserName(val) {
     if (val.isEmpty) {
@@ -25,6 +28,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor:myHexColor1,
       body:SingleChildScrollView(
         child: Column(
@@ -49,16 +53,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         TextFormField(decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                           border: OutlineInputBorder(),
-                          labelText:'Username',
+                          errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                          focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                          hintText:'Username',
                           errorStyle: TextStyle(color: Colors.white),
                           contentPadding: EdgeInsets.symmetric(vertical: 18.0,horizontal: 5.0),
-                          labelStyle:TextStyle(color:Colors.white),
+                          hintStyle:TextStyle(color:Colors.white),
                           prefixIcon:Icon(Icons.person,color:Colors.white),
                         ),
                           controller: userName,
                           validator:validateUserName,
                           keyboardType: TextInputType.name,
                           style: TextStyle(color: Colors.white),
+                          cursorColor: Colors.white,
                         ),
                         SizedBox(height: 13.0),
                         SizedBox(height: 33.0),
@@ -82,12 +90,33 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     print(response.statusCode);
                                     print(response.body);
                                     print(email);
-                                    Navigator.of(context).pop(
-
+                                    var success =ResponseModel.fromJson(json.decode(response.body));
+                                    print(success.userMsg);
+                                    _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content:Text(success.userMsg),
+                                          backgroundColor: Colors.blue,
+                                          duration:Duration(seconds: 5),
+                                          action: SnackBarAction(
+                                            label: 'Ok',
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        )
                                     );
                                   }
                                   if(response.statusCode==401){
-                                    print('NULL value passing');
+                                    var error =ErrorModel.fromJson(json.decode(response.body));
+                                    print(error.userMsg);
+                                    _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content:Text(error.userMsg),
+                                          backgroundColor: Colors.blue,
+                                          duration:Duration(seconds: 2),
+                                        )
+                                    );
                                     print(response.statusCode);
                                     return null;
                                   }

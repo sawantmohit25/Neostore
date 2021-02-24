@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neostore_app/Screens/login.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -34,83 +35,85 @@ class _HomeScreenState extends State<HomeScreen> {
                   data:ThemeData.light().copyWith(
                       primaryColor: Colors.grey[850],
                   ),
-                    child: UserAccountsDrawerHeader(
-                  accountName: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Kinjal Jain",style: TextStyle(fontSize: 23.0),),
-                    ],
-                  ),
-                  accountEmail: Row(mainAxisAlignment:MainAxisAlignment.center,children:[Text("kinjal.jain@wwindia.com",style: TextStyle(fontSize: 13.0),)] ),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Colors.orange,
-                    child: Text(
-                      "K",
-                      style: TextStyle(fontSize: 40.0),
-                    ),
-                  ),
-                ),
+                    child:Column(
+                      children: [
+                        SizedBox(height: 37.0),
+                        Container(
+                          width: 83,
+                          height: 83,
+                          decoration: BoxDecoration(    border: Border.all(color:Colors.white),shape: BoxShape.circle,image: DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60'),fit: BoxFit.fill),),
+                        ),
+                        SizedBox(height:18.0),
+                        Text("Kinjal Jain",style: TextStyle(fontSize: 23.0,color: Colors.white),),
+                        SizedBox(height:13.0),
+                        Text("kinjal.jain@wwindia.com",style: TextStyle(fontSize: 13.0,color: Colors.white),)
+                      ],
+                    )
               ),
+              SizedBox(height:13.0),
+              Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.shopping_cart,color: Colors.white,), title: Text("My Cart",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.shopping_cart,color: Colors.white,size: 28.0), title: Text("My Cart",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.deck,color: Colors.white,), title: Text("Tables",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.deck,color: Colors.white,size: 28.0), title: Text("Tables",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.weekend,color: Colors.white,), title: Text("Sofas",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.weekend,color: Colors.white,size: 28.0), title: Text("Sofas",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.event_seat,color: Colors.white,), title: Text("Chairs",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.event_seat,color: Colors.white,size: 28.0), title: Text("Chairs",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.table_chart_sharp,color: Colors.white,), title: Text("Cupboards",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.table_chart_sharp,color: Colors.white,size: 28.0), title: Text("Cupboards",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.person,color: Colors.white,), title: Text("My Account",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.person,color: Colors.white,size: 28.0), title: Text("My Account",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.location_on_outlined,color: Colors.white,), title: Text("Store Locator",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.location_on_outlined,color: Colors.white,size: 28.0), title: Text("Store Locator",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.fact_check,color: Colors.white,), title: Text("My Orders",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.fact_check,color: Colors.white,size: 28.0), title: Text("My Orders",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
-                leading: Icon(Icons.logout,color: Colors.white,), title: Text("Logout",style: TextStyle(color: Colors.white),),
+                leading: Icon(Icons.logout,color: Colors.white,size: 28.0), title: Text("Logout",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
               ),
             ],

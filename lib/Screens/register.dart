@@ -2,34 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'package:neostore_app/usermodel.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
-Future<UserModel> postData(String firstName,String lastName,String email,String password,String confirmPassword,String gender,String phoneNo) async{
-  final String url= 'http://staging.php-dev.in:8844/trainingapp/api/users/register';
-  final response = await http.post(url,body :{
-    "first_name": firstName,
-    "last_name":lastName,
-    "email":email,
-    "password":password,
-    "confirm_password":confirmPassword,
-    "gender":gender,
-    "phone_no":phoneNo
-  });
-  if(response.statusCode==200){
-    print(response.statusCode);
-  return userModelFromJson(response.body);
-  }
-  else{
-    print('NULL value passing');
-    print(response.statusCode);
-    return null;
-  }
-}
 class _RegisterScreenState extends State<RegisterScreen> {
   Color myHexColor = Color(0xffe91c1a);
   Color myHexColor1 = Color(0xfffe3f3f);
+  // @override
+  // void initState() {
+  //     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  //     super.initState();
+  //   }
   TextEditingController firstNameContr = TextEditingController();
   TextEditingController lastNameContr = TextEditingController();
   TextEditingController emailContr = TextEditingController();
@@ -38,8 +24,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController phoneNoContr = TextEditingController();
   String gender1;
   bool isValidateRadio1 = false,checkValue=false,hiddenValue=true,hiddenValue1=true;
-  UserModel _user;
+  //UserModel _user;
   final _formKey = GlobalKey<FormState>();
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   String validatePhone(val) {
     if (val.isEmpty) {
       return 'Required';
@@ -109,13 +96,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    });
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor:myHexColor1,
       appBar: AppBar(
         title: Text('Register'),
         centerTitle: true,
         elevation: 0.0,
         backgroundColor:myHexColor,
+        leading:IconButton(icon:Icon(Icons.arrow_back_ios_sharp ),onPressed: (){Navigator.pop(context);},)
       ),
       body:SingleChildScrollView(
         child: Padding(
@@ -138,44 +130,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormField(decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                     border: OutlineInputBorder(),
-                    labelText:'First Name',
+                    errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                    focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                    hintText:'First Name',
                       errorStyle: TextStyle(color: Colors.white),
                     contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
-                  labelStyle:TextStyle(color:Colors.white),
+                  hintStyle:TextStyle(color:Colors.white),
                   prefixIcon:Icon(Icons.person,color:Colors.white),
                   ),
                     controller: firstNameContr,
                     validator:validateFirstName,
                     keyboardType: TextInputType.name,
                     style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
                   ),
                   SizedBox(height: 7.0),
                   TextFormField(decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                       border: OutlineInputBorder(),
-                      labelText: 'Last Name',
+                      errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                      focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                      hintText: 'Last Name',
                       errorStyle: TextStyle(color: Colors.white),
                       contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
-                      labelStyle:TextStyle(color:Colors.white),
+                      hintStyle:TextStyle(color:Colors.white),
                       prefixIcon:Icon(Icons.person,color: Colors.white,)),
                     controller: lastNameContr,
                     validator: validateLastName,
                     keyboardType: TextInputType.name,
                     style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
                   ),
                   SizedBox(height: 7.0),
                   TextFormField(decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
+                    errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                    focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                    hintText: 'Email',
                     errorStyle: TextStyle(color: Colors.white),
                     contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
                     prefixIcon:Icon(Icons.email,color: Colors.white,),
-                    labelStyle:TextStyle(color:Colors.white),),
+                    hintStyle:TextStyle(color:Colors.white),),
                     controller: emailContr,
                     validator: validateEmail,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
                   ),
                   SizedBox(height: 7.0),
                     TextFormField(
@@ -185,11 +189,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: Colors.white, width: 0.0),
                           ),
                           border: OutlineInputBorder(),
-                          labelText: 'Password',
+                        errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                        focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                          hintText: 'Password',
                           errorStyle: TextStyle(color: Colors.white),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5.0),
-                          labelStyle: TextStyle(color: Colors.white),
+                          hintStyle: TextStyle(color: Colors.white),
                           prefixIcon: Icon(
                             Icons.lock,
                             color: Colors.white,
@@ -210,6 +217,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: validatePass,
                       obscureText:hiddenValue,
                       style: TextStyle(color: Colors.white),
+                      cursorColor: Colors.white,
 
                     ),
                   SizedBox(height: 7.0),
@@ -220,11 +228,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: Colors.white, width: 0.0),
                           ),
                           border: OutlineInputBorder(),
-                          labelText: 'Confirm Password',
+                        errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                        focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                          hintText: 'Confirm Password',
                           errorStyle: TextStyle(color: Colors.white),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 5.0),
-                          labelStyle: TextStyle(color: Colors.white),
+                          hintStyle: TextStyle(color: Colors.white),
                           prefixIcon: Icon(
                             Icons.lock,
                             color: Colors.white,
@@ -246,6 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       obscureText:hiddenValue1,
                       validator: validateConfirmPass,
                       style: TextStyle(color: Colors.white),
+                      cursorColor: Colors.white,
                     ),
                   Row(
                     children: [
@@ -309,11 +321,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               const BorderSide(color: Colors.white, width: 0.0),
                         ),
                         border: OutlineInputBorder(),
-                        labelText: 'Phone Number',
+                        errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                        focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                        hintText: 'Phone Number',
                         errorStyle: TextStyle(color: Colors.white),
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 5.0),
-                        labelStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Colors.white),
                         prefixIcon:
                             Icon(Icons.phone_android, color: Colors.white),
                       ),
@@ -321,6 +336,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: phoneNoContr,
                       validator: validatePhone,
                       style: TextStyle(color: Colors.white),
+                      cursorColor: Colors.white,
                     ),
                   Row(
                     children: [
@@ -381,14 +397,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   final String confirmPassword=confirmPasswordContr.text;
                                   final String gender=gender1;
                                   final String phoneNo=phoneNoContr.text;
-                                  UserModel user =await postData(firstName,lastName,email,password,confirmPassword,gender,phoneNo);
-                                  // setState(() {
-                                  //   _user=user;
-                                  //   print(_user.firstName);
-                                  // });
-                                  //print(_user.firstName);
-                                  print(user.firstName);
-                                  Navigator.pop(context);
+                                  Future postData(String firstName,String lastName,String email,String password,String confirmPassword,String gender,String phoneNo) async{
+                                    final String url= 'http://staging.php-dev.in:8844/trainingapp/api/users/register';
+                                    final response = await http.post(url,body :{
+                                      "first_name": firstName,
+                                      "last_name":lastName,
+                                      "email":email,
+                                      "password":password,
+                                      "confirm_password":confirmPassword,
+                                      "gender":gender,
+                                      "phone_no":phoneNo
+                                    });
+                                    if(response.statusCode==200){
+                                      print(response.statusCode);
+                                      var success =ResponseModel.fromJson(json.decode(response.body));
+                                      print(success.userMsg);
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                            content:Text(success.userMsg),
+                                            backgroundColor: Colors.blue,
+                                            duration:Duration(seconds: 5),
+                                            action: SnackBarAction(
+                                              label: 'Ok',
+                                              textColor: Colors.white,
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          )
+                                      );
+                                    }
+                                    if(response.statusCode==404){
+                                      var error =ErrorModel.fromJson(json.decode(response.body));
+                                      print(error.userMsg);
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                            content:Text(error.userMsg),
+                                            backgroundColor: Colors.blue,
+                                            duration:Duration(seconds: 2),
+                                          )
+                                      );
+                                      print(response.statusCode);
+                                      return null;
+                                    }
+                                  }
+                                  postData(firstName, lastName, email, password, confirmPassword, gender, phoneNo);
                                   }
                             }
                         },
