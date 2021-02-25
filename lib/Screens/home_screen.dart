@@ -111,9 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: Icon(Icons.logout,color: Colors.white,size: 28.0), title: Text("Logout",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
               ),
             ],

@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Color myHexColor = Color(0xffe91c1a);
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
     // TODO: implement initState
   }
@@ -48,9 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    });
+    Size size= MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor:myHexColor1,
@@ -218,20 +216,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   ) ,
                 )
     ),
+              SizedBox(height: 160.0,),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16.0,80.0,0,20.0),
+                padding: const EdgeInsets.fromLTRB(13.0,0,13.0,0),
+                //padding: EdgeInsets.only(bottom: 10.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RichText(
                       text: TextSpan(
                         style:TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 18.0) ,
-                          text: 'DONT HAVE AN ACCOUNT?',
+                            fontSize: 16.0) ,
+                        text: 'DONT HAVE AN ACCOUNT?',
                       ),
                     ),
-                    SizedBox(width:60.0),
                     Container(
                       width:46 ,
                       height:46 ,
@@ -246,6 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               )
+
             ],
           ),
       ),

@@ -23,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController confirmPasswordContr = TextEditingController();
   TextEditingController phoneNoContr = TextEditingController();
   String gender1;
-  bool isValidateRadio1 = false,checkValue=false,hiddenValue=true,hiddenValue1=true;
+  bool isValidateRadio1 =false,checkValue=false,hiddenValue=true,hiddenValue1=true;
   //UserModel _user;
   final _formKey = GlobalKey<FormState>();
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -145,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                   ),
-                  SizedBox(height: 7.0),
+                  SizedBox(height: 13.0),
                   TextFormField(decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                       border: OutlineInputBorder(),
@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                   ),
-                  SizedBox(height: 7.0),
+                  SizedBox(height: 13.0),
                   TextFormField(decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                     border: OutlineInputBorder(),
@@ -181,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                   ),
-                  SizedBox(height: 7.0),
+                  SizedBox(height: 13.0),
                     TextFormField(
                       decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
@@ -220,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       cursorColor: Colors.white,
 
                     ),
-                  SizedBox(height: 7.0),
+                  SizedBox(height: 13.0),
                     TextFormField(
                       decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
@@ -259,6 +259,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
                     ),
+                  SizedBox(height: 23.0,),
                   Row(
                     children: [
                       Text('Gender', style: TextStyle(
@@ -313,7 +314,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-              isValidateRadio1 && gender1 == null ? Text('Please Select your Gender', style: TextStyle(fontSize: 10, color: Colors.white)) : Container(),
+              isValidateRadio1 && gender1 == null ? Text('Please Select your Gender', style: TextStyle(fontSize: 10, color: Colors.white)):Container() ,
+                  SizedBox(height: 23.0,),
                     TextFormField(
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
@@ -387,7 +389,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: TextStyle(fontSize: 20),
                         ),
                         onPressed: () async{
+                          setState(() {
                             isValidateRadio1=true;
+                          });
                             if(_formKey.currentState.validate()) {
                                 if(gender1!=null && checkValue==true){
                                   final String firstName=firstNameContr.text;
