@@ -48,7 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    Size size= MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor:myHexColor1,
