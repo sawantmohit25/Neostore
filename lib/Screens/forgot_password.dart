@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:neostore_app/Screens/login.dart';
 import 'package:neostore_app/usermodel.dart';
 import 'dart:convert';
-import 'package:neostore_app/forgot_bloc.dart';
-
+import 'package:neostore_app/bloc/forgot_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -33,6 +33,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+  @override
+  void dispose() {
+    forgotObj.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -163,8 +169,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         StreamBuilder<String>(
                                 stream: forgotObj.forgotStream,
                                 builder: (context, snapshot) {
-                                  WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
-                                  return Text('${snapshot.data}');
+                                  if(snapshot.data!=null)
+                                  {
+                                  Fluttertoast.showToast(
+                                      msg:snapshot.data,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.white,
+                                      textColor: Colors.red
+                                  );
+                                  if(forgotObj.statusCode==200) {
+                                    // if(snapshot.data=='New password sent on email')
+                                    Future.delayed(
+                                        const Duration(seconds: 1), () {
+                                      Navigator.pop(context);
+                                    });
+                                  }
+                                  }
+                                  //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                                  return Text('');
                                 })
                       ],
                     ),

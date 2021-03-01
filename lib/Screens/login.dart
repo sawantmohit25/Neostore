@@ -7,6 +7,8 @@ import 'package:neostore_app/Screens/home_screen.dart';
 import 'package:neostore_app/usermodel.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:neostore_app/bloc/login_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -14,13 +16,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
-  @override
-  void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
-    super.initState();
-    // TODO: implement initState
-  }
+  // @override
+  // void initState() {
+  //   SystemChrome.setEnabledSystemUIOverlays([]);
+  //   super.initState();
+  //   // TODO: implement initState
+  // }
   final _formKey = GlobalKey<FormState>();
+  final loginObj = LoginBloc();
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController userName = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -47,7 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
   @override
+  void dispose() {
+    loginObj.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
+    Size size=MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor:myHexColor1,
@@ -140,49 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if(_formKey.currentState.validate()) {
                                 final String email=userName.text;
                                 final String pass=password.text;
-                                Future postData(String email,String password) async {
-                                  final String url = 'http://staging.php-dev.in:8844/trainingapp/api/users/login';
-                                  final response = await http.post(url, body: {
-                                    "email": email,
-                                    "password": password,
-                                  });
-                                  if(response.statusCode==200){
-                                    print(response.statusCode);
-                                    print(email);
-                                    var success =ResponseModel.fromJson(json.decode(response.body));
-                                    print(success.userMsg);
-                                    _scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                          content:Text(success.userMsg),
-                                          backgroundColor: Colors.blue,
-                                          duration:Duration(seconds: 5),
-                                          action: SnackBarAction(
-                                            label: 'Ok',
-                                            textColor: Colors.white,
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => HomeScreen()));
-                                            },
-                                          ),
-                                        )
-                                    );
-                                    }
-                                  if(response.statusCode==401){
-                                   var error =ErrorModel.fromJson(json.decode(response.body));
-                                   print(error.userMsg);
-                                    _scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                          content:Text(error.userMsg),
-                                          backgroundColor: Colors.blue,
-                                          duration:Duration(seconds: 2),
-                                        )
-                                    );
-                                    print(response.statusCode);
-                                    return null;
-                                  }
-                                }
-                                postData(email, pass);
+                                loginObj.postData(email,pass);
                               }
                             },
                             color: Colors.white,
@@ -193,6 +161,32 @@ class _LoginScreenState extends State<LoginScreen> {
                                 side: BorderSide(color: Colors.red)),
                           ),
                         ),
+                        StreamBuilder<String>(
+                            stream: loginObj.loginStream,
+                            builder: (context, snapshot) {
+                              if(snapshot.data!=null)
+                              {
+                                Fluttertoast.showToast(
+                                    msg:snapshot.data,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.white,
+                                    textColor: Colors.red
+                                );
+                                if(loginObj.statusCode==200) {
+                                  // if(snapshot.data=='Logged In successfully')
+                                  Future.delayed(
+                                      const Duration(seconds: 1), () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>
+                                            HomeScreen()));
+                                  });
+                                }
+                              }
+                              //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                              return Text('');
+                            }),
                         SizedBox(height: 21.0),
                         RichText(
                           text: TextSpan(
