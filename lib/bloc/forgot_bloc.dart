@@ -18,7 +18,7 @@ class ForgotPassBloc{
       print(response.statusCode);
       print(response.body);
       print(email);
-      var success =ResponseModel.fromJson(json.decode(response.body));
+      var success =SuccessModel.fromJson(json.decode(response.body));
       print(success.userMsg);
       forgotSink.add(success.userMsg);
       // _scaffoldKey.currentState.showSnackBar(

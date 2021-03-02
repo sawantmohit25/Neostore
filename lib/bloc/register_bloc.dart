@@ -23,7 +23,7 @@ class RegisterBloc{
       print(response.statusCode);
       statusCode=response.statusCode;
       print(response.body);
-      var success =ResponseModel.fromJson(json.decode(response.body));
+      var success =SuccessModel.fromJson(json.decode(response.body));
       print(success.userMsg);
       registerSink.add(success.userMsg);
     }

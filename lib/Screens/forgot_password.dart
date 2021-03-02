@@ -5,11 +5,11 @@ import 'package:neostore_app/usermodel.dart';
 import 'dart:convert';
 import 'package:neostore_app/bloc/forgot_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
-
 class _ForgotPasswordState extends State<ForgotPassword> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
@@ -32,16 +32,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 @override
   void initState() {
     // TODO: implement initState
+  SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
   }
   @override
   void dispose() {
     forgotObj.dispose();
+
     // TODO: implement dispose
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
+    print('hello');
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: myHexColor1,

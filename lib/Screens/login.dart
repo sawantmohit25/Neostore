@@ -16,18 +16,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
-  // @override
-  // void initState() {
-  //   SystemChrome.setEnabledSystemUIOverlays([]);
-  //   super.initState();
-  //   // TODO: implement initState
-  // }
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+    // TODO: implement initState
+  }
   final _formKey = GlobalKey<FormState>();
   final loginObj = LoginBloc();
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController userName = TextEditingController();
   TextEditingController password = TextEditingController();
-  bool hiddenValue=true;
+  bool hiddenValue=true,navError=false;
   String validateUserName(val) {
     if (val.isEmpty) {
       return 'Required';
@@ -55,9 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
+    print('hi');
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor:myHexColor1,
@@ -147,6 +149,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                             ),
                             onPressed: ()async{
+                              setState(() {
+                                navError=true;
+                              });
                               if(_formKey.currentState.validate()) {
                                 final String email=userName.text;
                                 final String pass=password.text;
@@ -161,11 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 side: BorderSide(color: Colors.red)),
                           ),
                         ),
+                        navError==true?
                         StreamBuilder<String>(
                             stream: loginObj.loginStream,
                             builder: (context, snapshot) {
                               if(snapshot.data!=null)
                               {
+                                navError=false;
                                 Fluttertoast.showToast(
                                     msg:snapshot.data,
                                     toastLength: Toast.LENGTH_SHORT,
@@ -186,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
                               return Text('');
-                            }),
+                            }) :Text(''),
                         SizedBox(height: 21.0),
                         RichText(
                           text: TextSpan(

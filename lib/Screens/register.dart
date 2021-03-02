@@ -103,10 +103,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
   @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    setState(() {
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    });
+    // setState(() {
+    //   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // });
+    print('hey');
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor:myHexColor1,

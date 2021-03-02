@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neostore_app/Screens/login.dart';
+import 'package:neostore_app/bloc/login_bloc.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -8,6 +9,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
+  LoginBloc drawObj=LoginBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,19 +37,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   data:ThemeData.light().copyWith(
                       primaryColor: Colors.grey[850],
                   ),
-                    child:Column(
-                      children: [
-                        SizedBox(height: 37.0),
-                        Container(
-                          width: 83,
-                          height: 83,
-                          decoration: BoxDecoration(    border: Border.all(color:Colors.white),shape: BoxShape.circle,image: DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60'),fit: BoxFit.fill),),
-                        ),
-                        SizedBox(height:18.0),
-                        Text("Kinjal Jain",style: TextStyle(fontSize: 23.0,color: Colors.white),),
-                        SizedBox(height:13.0),
-                        Text("kinjal.jain@wwindia.com",style: TextStyle(fontSize: 13.0,color: Colors.white),)
-                      ],
+                    child:StreamBuilder<String>(
+                      stream:drawObj.drawStream,
+                      builder: (context, snapshot) {
+                        if(snapshot.data!=null) {
+                          print('bolte ${snapshot.data}');
+                          return Column(
+                            children: [
+                              SizedBox(height: 37.0),
+                              Container(
+                                width: 83,
+                                height: 83,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(image: NetworkImage(
+                                      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60'),
+                                      fit: BoxFit.fill),),
+                              ),
+                              SizedBox(height: 18.0),
+                              Text("Kinjal Jain", style: TextStyle(
+                                  fontSize: 23.0, color: Colors.white),),
+                              SizedBox(height: 13.0),
+                              Text("kinjal.jain@wwindia.com", style: TextStyle(
+                                  fontSize: 13.0, color: Colors.white),)
+                            ],
+                          );
+                        }
+                        return Text('');
+                      }
                     )
               ),
               SizedBox(height:13.0),
