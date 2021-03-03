@@ -1,7 +1,7 @@
 import 'dart:convert';
 class SuccessModel {
   int status;
-  Data data;
+  UserData data;
   String message;
   String userMsg;
 
@@ -9,7 +9,7 @@ class SuccessModel {
 
   SuccessModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new UserData.fromJson(json['data']) : null;
     message = json['message'];
     userMsg = json['user_msg'];
   }
@@ -26,24 +26,24 @@ class SuccessModel {
   }
 }
 
-class Data {
+class UserData {
   int id;
   int roleId;
   String firstName;
   String lastName;
   String email;
   String username;
-  Null profilePic;
-  Null countryId;
+  String profilePic;
+  String countryId;
   String gender;
   String phoneNo;
-  Null dob;
+  String dob;
   bool isActive;
   String created;
   String modified;
   String accessToken;
 
-  Data(
+  UserData(
       {this.id,
         this.roleId,
         this.firstName,
@@ -60,7 +60,7 @@ class Data {
         this.modified,
         this.accessToken});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     roleId = json['role_id'];
     firstName = json['first_name'];

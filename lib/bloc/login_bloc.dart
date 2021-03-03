@@ -5,13 +5,13 @@ import 'package:neostore_app/usermodel.dart';
 
 class LoginBloc{
   final stateStreamController=StreamController<String>.broadcast();//broadcast use while login navigation since showing error
-  var statusCode;
+  var statusCode,firstName;
   StreamSink<String> get loginSink =>stateStreamController.sink;
   Stream<String> get loginStream =>stateStreamController.stream;
 
-  final drawStreamController=StreamController<String>.broadcast();//broadcast use while login navigation since showing error
-  StreamSink<String> get drawSink =>drawStreamController.sink;
-  Stream<String> get drawStream =>drawStreamController.stream;
+  final drawStreamController=StreamController<UserData>.broadcast();//broadcast use while login navigation since showing error
+  StreamSink<UserData> get drawSink =>drawStreamController.sink;
+  Stream<UserData> get drawStream =>drawStreamController.stream;
 
 
   postData(String email,String password) async {
@@ -26,13 +26,11 @@ class LoginBloc{
       print(response.body);
       print(email);
       var success =SuccessModel.fromJson(json.decode(response.body));
-       var data =Data.fromJson(json.decode(response.body));
       print(success.userMsg);
+      print('mohit ${success.data.firstName}');
+      firstName=success.data.firstName;
       loginSink.add(success.userMsg);
-      drawSink.add(success.data.firstName);
-      drawSink.add(success.data.lastName);
-      drawSink.add(success.data.email);
-      drawSink.add(success.data.profilePic);
+       drawSink.add(success.data);
     }
     else if(response.statusCode==401){
       statusCode=response.statusCode;
