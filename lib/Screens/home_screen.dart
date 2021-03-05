@@ -1,9 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:neostore_app/Screens/login.dart';
+import 'package:neostore_app/Screens/my_account.dart';
+import 'package:neostore_app/Screens/table_list.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
 import 'package:neostore_app/usermodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -12,7 +15,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
+  String firstName,lastName,email,profilePic;
   final data=LoginBloc();
+  
+  @override
+  void initState() {
+      getData();
+    super.initState();
+  }
+  getData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      firstName=prefs.getString("key1");
+      print('Driver ${firstName}');
+      lastName=prefs.getString("key2");
+      email=prefs.getString("key3");
+      profilePic=prefs.getString("key4");
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
@@ -51,15 +71,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3MlMjB3b21hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60'),
+                                  image: DecorationImage(image: NetworkImage(profilePic!=null?profilePic:'https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
                                       fit: BoxFit.fill),),
                               ),
                               SizedBox(height: 18.0),
-                              Text('', style: TextStyle(
-                                  fontSize: 23.0, color: Colors.white),),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(firstName!=null ? firstName : '', style: TextStyle(
+                                      fontSize: 23.0, color: Colors.white),),
+                                  SizedBox(width: 2.0),
+                                  Text(lastName!=null ? lastName : '', style: TextStyle(
+                                      fontSize: 23.0, color: Colors.white),),
+                                ],
+                              ),
                               SizedBox(height: 13.0),
-                              Text("kinjal.jain@wwindia.com", style: TextStyle(
+                              Text(email !=null ? email : '', style: TextStyle(
                                   fontSize: 13.0, color: Colors.white),)
                             ],
                           )
@@ -76,7 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: Icon(Icons.deck,color: Colors.white,size: 28.0), title: Text("Tables",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TableList()));
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
@@ -104,7 +133,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: Icon(Icons.person,color: Colors.white,size: 28.0), title: Text("My Account",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyAccount()));
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),

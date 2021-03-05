@@ -6,8 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc{
   final stateStreamController=StreamController<String>.broadcast();//broadcast use while login navigation since showing error
-  var statusCode,firstName;
-  String key1,key2,key3,key4,get1,get2,get3,get4;
+  var statusCode,val1;
   StreamSink<String> get loginSink =>stateStreamController.sink;
   Stream<String> get loginStream =>stateStreamController.stream;
 
@@ -16,6 +15,7 @@ class LoginBloc{
   Stream<UserData> get drawStream =>drawStreamController.stream;
 
   postData(String email,String password) async {
+    String val;
     final String url = 'http://staging.php-dev.in:8844/trainingapp/api/users/login';
     final response = await http.post(url, body: {
       "email": email,
@@ -28,22 +28,21 @@ class LoginBloc{
       print(email);
       var success =SuccessModel.fromJson(json.decode(response.body));
       print(success.userMsg);
-      SharedPreferences prefs= await SharedPreferences.getInstance();
-      prefs.setString(key1,success.data.firstName);
-      prefs.setString(key2,success.data.lastName);
-      prefs.setString(key3,success.data.email);
-      prefs.setString(key4,success.data.profilePic);
-       get1 = prefs.getString(key1);
-       get2 = prefs.getString(key2);
-       get3 = prefs.getString(key3);
-       get4 = prefs.getString(key4);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("key1",success.data.firstName);
+      prefs.setString('key2',success.data.lastName);
+      prefs.setString('key3',success.data.email);
+      prefs.setString('key4',success.data.profilePic);
+      prefs.setString('key5',success.data.phoneNo);
+      prefs.setString('key6',success.data.dob);
+
+
       print('mohit ${success.data.firstName}');
-      print('rohit ${get1}');
       loginSink.add(success.userMsg);
     }
     else if(response.statusCode==401){
       statusCode=response.statusCode;
-      var error =ErrorModel.fromJson(json.decode(response.body));
+       var error =ErrorModel.fromJson(json.decode(response.body));
       print(error.userMsg);
       loginSink.add(error.userMsg);
     }
