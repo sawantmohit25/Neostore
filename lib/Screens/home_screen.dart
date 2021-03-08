@@ -4,7 +4,7 @@ import 'package:neostore_app/Screens/login.dart';
 import 'package:neostore_app/Screens/my_account.dart';
 import 'package:neostore_app/Screens/table_list.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
-import 'package:neostore_app/usermodel.dart';
+import 'package:neostore_app/model_classes/usermodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 class HomeScreen extends StatefulWidget {

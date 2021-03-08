@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
-import 'package:neostore_app/usermodel.dart';
+import 'package:neostore_app/model_classes/usermodel.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:neostore_app/bloc/register_bloc.dart';

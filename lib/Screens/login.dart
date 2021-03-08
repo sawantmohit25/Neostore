@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:neostore_app/Screens/forgot_password.dart';
 import 'package:neostore_app/Screens/register.dart';
 import 'package:neostore_app/Screens/home_screen.dart';
-import 'package:neostore_app/usermodel.dart';
+import 'package:neostore_app/model_classes/usermodel.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';

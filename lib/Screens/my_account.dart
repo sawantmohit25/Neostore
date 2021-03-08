@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:neostore_app/usermodel.dart';
+import 'package:neostore_app/model_classes/usermodel.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class MyAccount extends StatefulWidget {
