@@ -155,9 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
                 leading: Icon(Icons.logout,color: Colors.white,size: 28.0), title: Text("Logout",style: TextStyle(color: Colors.white,fontSize:16.0),),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                onTap: () async{
+                  SharedPreferences loginData = await SharedPreferences.getInstance();
+                  loginData.remove('login');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>LoginScreen()));
+                  // Navigator.pop(context);
+                  // Navigator.pop(context);
                 },
               ),
             ],

@@ -28,6 +28,8 @@ class LoginBloc{
       print(email);
       var success =SuccessModel.fromJson(json.decode(response.body));
       print(success.userMsg);
+      SharedPreferences loginData = await SharedPreferences.getInstance();
+      loginData.setString('login',email);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("key1",success.data.firstName);
       prefs.setString('key2',success.data.lastName);

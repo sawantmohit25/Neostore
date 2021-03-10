@@ -52,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     loginObj.dispose();
+    userName.dispose();
+    password.dispose();
     // TODO: implement dispose
     super.dispose();
   }
@@ -237,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height:46 ,
                       color:myHexColor,
                       child: IconButton(icon:Icon(Icons.add,size:32,),color:Colors.white, onPressed:(){
-                        Navigator.push(
+                        Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => RegisterScreen()));
 
