@@ -29,7 +29,7 @@ dependencies:
   device_preview: ^0.5.5
   carousel_pro: ^1.0.0
   shared_preferences: ^0.5.12+4
-
+  image_picker: ^0.6.7+22
 
 
   # The following adds the Cupertino Icons font to your application.

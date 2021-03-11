@@ -20,7 +20,7 @@ class LoginBloc{
     final response = await http.post(url, body: {
       "email": email,
       "password": password,
-    });
+    },);
     if(response.statusCode==200){
       print(response.statusCode);
       statusCode=response.statusCode;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neostore_app/model_classes/usermodel.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
+import 'package:neostore_app/screens/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class MyAccount extends StatefulWidget {
   @override
@@ -127,7 +128,9 @@ class _MyAccountState extends State<MyAccount> {
                           height:47,
                           width:double.infinity,
                           child: RaisedButton(
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.push(context,MaterialPageRoute(builder:(context) => EditProfile()));
+                            },
                             child: Text(
                               "EDIT PROFILE",
                               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
