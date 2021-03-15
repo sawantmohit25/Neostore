@@ -18,7 +18,7 @@ class RegisterBloc{
       "confirm_password":confirmPassword,
       "gender":gender,
       "phone_no":phoneNo
-    });
+    },);
     if(response.statusCode==200){
       print(response.statusCode);
       statusCode=response.statusCode;

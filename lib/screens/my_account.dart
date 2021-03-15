@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:neostore_app/model_classes/usermodel.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
 import 'package:neostore_app/screens/edit_profile.dart';
+import 'package:neostore_app/screens/reset_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class MyAccount extends StatefulWidget {
   @override
@@ -11,7 +14,7 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
-  String firstName,lastName,email,profilePic,phoneNo,dob;
+  String firstName,lastName,email,phoneNo,dob,profile_Pic;
   @override
   void initState() {
     getData();
@@ -24,9 +27,9 @@ class _MyAccountState extends State<MyAccount> {
       print('Driver ${firstName}');
       lastName=prefs.getString("key2");
       email=prefs.getString("key3");
-      profilePic=prefs.getString("key4");
       phoneNo=prefs.getString("key5");
       dob=prefs.getString("key6");
+      profile_Pic=prefs.getString("key8");
     });
   }
   @override
@@ -68,7 +71,7 @@ class _MyAccountState extends State<MyAccount> {
                               height:133.0,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                image: DecorationImage(image: NetworkImage('https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
+                                image: DecorationImage(image:profile_Pic!=null? NetworkImage(profile_Pic):NetworkImage('https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
                                     fit: BoxFit.fill),),
                             ),
                           ],
@@ -151,7 +154,9 @@ class _MyAccountState extends State<MyAccount> {
                 height: 52.0,
                 width: double.infinity,
                 child: RaisedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context,MaterialPageRoute(builder:(context) => ResetPass()));
+                  },
                   child: Text(
                     "RESET PASSWORD",
                     style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),

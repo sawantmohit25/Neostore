@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'dart:core';
 import 'package:image_picker/image_picker.dart';
+import 'package:neostore_app/bloc/edit_bloc.dart';
+import 'package:neostore_app/screens/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class EditProfile extends StatefulWidget {
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -10,14 +15,31 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   File _image;
+  String accessToken,profilePic;
+  bool navError=false;
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
   final _formKey = GlobalKey<FormState>();
+  final editObj=EditBloc();
+  String base64Image;
   TextEditingController firstNameContr = TextEditingController();
   TextEditingController lastNameContr = TextEditingController();
   TextEditingController emailContr = TextEditingController();
   TextEditingController phoneNoContr = TextEditingController();
   TextEditingController dobContr = TextEditingController();
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+  getData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      accessToken=prefs.getString("key7");
+      profilePic=prefs.getString("key8");
+      print('hello${accessToken}');
+    });
+  }
 
   String validateLastName(val) {
     if (val.isEmpty) {
@@ -102,7 +124,7 @@ class _EditProfileState extends State<EditProfile> {
                             height:133.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              image: DecorationImage(image:_image!=null?FileImage(_image): NetworkImage('https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
+                              image: DecorationImage(image:_image!=null?FileImage(File(_image.path)): NetworkImage(profilePic!=null?profilePic:'https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
                                   fit: BoxFit.fill),),
                           ),
                           onTap:(){
@@ -229,7 +251,7 @@ class _EditProfileState extends State<EditProfile> {
                                   lastDate: DateTime(2022),
                               );
 
-                              String formatDate= DateFormat("yyyy-MM-dd").format(date);
+                              String formatDate= DateFormat("dd-MM-yyyy").format(date);
                               dobContr.text =formatDate;
                             },
                           ),
@@ -239,7 +261,18 @@ class _EditProfileState extends State<EditProfile> {
                             width:double.infinity,
                             child: RaisedButton(
                               onPressed: (){
-
+                                setState(() {
+                                  navError=true;
+                                });
+                                if(_formKey.currentState.validate()) {
+                                  final String firstName=firstNameContr.text;
+                                  final String lastName=lastNameContr.text;
+                                  final String email=emailContr.text;
+                                  final String phoneNo=phoneNoContr.text;
+                                  final String dob=dobContr.text;
+                                  final String img=base64Image;
+                                  editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                }
                               },
                               child: Text(
                                 "SUBMIT",
@@ -253,6 +286,34 @@ class _EditProfileState extends State<EditProfile> {
                                   side: BorderSide(color: Colors.red)),
                             ),
                           ),
+                          navError==true?
+                          StreamBuilder<String>(
+                              stream: editObj.editStream,
+                              builder: (context, snapshot) {
+                                if(snapshot.data!=null)
+                                {
+                                  navError=false;
+                                  Fluttertoast.showToast(
+                                      msg:snapshot.data,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.white,
+                                      textColor: Colors.red
+                                  );
+                                  if(editObj.statusCode==200) {
+                                    // if(snapshot.data=='Logged In successfully')
+                                    Future.delayed(
+                                        const Duration(seconds: 1), () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>
+                                              LoginScreen()));
+                                    });
+                                  }
+                                }
+                                //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                                return Text('');
+                              }) :Text(''),
                         ],
                       )
                     )
@@ -267,7 +328,9 @@ class _EditProfileState extends State<EditProfile> {
   Future pickImage() async{
     PickedFile image= await ImagePicker().getImage(source:ImageSource.gallery);
     setState(() {
-      _image=image as File;
+      _image=File(image.path);
+      List<int> imageBytes =  _image.readAsBytesSync();
+      base64Image = base64Encode(imageBytes);
     });
   }
 }
