@@ -3,6 +3,8 @@ import 'package:neostore_app/bloc/tablelist_bloc.dart';
 import 'package:neostore_app/model_classes/productmodel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:neostore_app/screens/product_detailed.dart';
 class TableList extends StatefulWidget {
   @override
   _TableListState createState() => _TableListState();
@@ -87,6 +89,9 @@ class _TableListState extends State<TableList> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
                         child: ListTile(
+                          onTap: (){
+                            Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed()));
+                          },
                           leading: Container(child: Image.network(
                               postList[index].productImages),
                               height: 73,
