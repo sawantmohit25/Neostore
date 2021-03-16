@@ -90,7 +90,7 @@ class _TableListState extends State<TableList> {
                         padding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
                         child: ListTile(
                           onTap: (){
-                            Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed()));
+                            Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed(id: postList[index].id,productImage:postList[index].productImages,appTitle:postList[index].name,initialRate: postList[index].rating,)));
                           },
                           leading: Container(child: Image.network(
                               postList[index].productImages),

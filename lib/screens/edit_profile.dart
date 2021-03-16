@@ -22,24 +22,30 @@ class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   final editObj=EditBloc();
   String base64Image;
-  TextEditingController firstNameContr = TextEditingController();
-  TextEditingController lastNameContr = TextEditingController();
-  TextEditingController emailContr = TextEditingController();
-  TextEditingController phoneNoContr = TextEditingController();
-  TextEditingController dobContr = TextEditingController();
-  @override
+@override
   void initState() {
     getData();
-    super.initState();
+       super.initState();
   }
   getData() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      firstNameContr.text=prefs.getString("key1");
+      lastNameContr.text=prefs.getString("key2");
+      emailContr.text=prefs.getString("key3");
+      phoneNoContr.text=prefs.getString("key5");
+      dobContr.text=prefs.getString("key6");
       accessToken=prefs.getString("key7");
       profilePic=prefs.getString("key8");
       print('hello${accessToken}');
     });
   }
+  TextEditingController firstNameContr = TextEditingController();
+  TextEditingController lastNameContr = TextEditingController();
+  TextEditingController emailContr = TextEditingController();
+  TextEditingController phoneNoContr = TextEditingController();
+  TextEditingController dobContr = TextEditingController();
+
 
   String validateLastName(val) {
     if (val.isEmpty) {
