@@ -302,13 +302,16 @@ class _ProductDetailedState extends State<ProductDetailed> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            insetPadding: EdgeInsets.fromLTRB(20,70.0,20,180.0),
             title:Text(barTitle,textAlign: TextAlign.center,),
             content:Container(
-              height:317,
               child: Column(
                 children: [
-                  Image.network(productImage),
-              SizedBox(height: 10.0),
+                  Padding(
+                    padding:EdgeInsets.fromLTRB(30.0,0,30,0),
+                    child: Container(child: Image.network(productImage)),
+                  ),
+              SizedBox(height: 30.0),
               RatingBar.builder(
                 initialRating:initialRate.toDouble(),
                 minRating: 1,
@@ -324,7 +327,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
                     setRating=rating.toString();
                 },
               ),
-                  SizedBox(height: 10.0),
+                  SizedBox(height:40.0),
                   Container(
                     height:55,
                     width:double.infinity,
@@ -381,69 +384,87 @@ class _ProductDetailedState extends State<ProductDetailed> {
         builder: (context) {
           return SingleChildScrollView(
             child: AlertDialog(
+              insetPadding: EdgeInsets.fromLTRB(20,70.0,20,140.0),
+              contentPadding: EdgeInsets.fromLTRB(0,33.0,0,33.0),
               content:Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,33.0,0,33.0),
-                  child: Column(
-                    children: [
-                      Text(barTitle,textAlign: TextAlign.center,style: TextStyle(fontSize: 25.0),),
-                      SizedBox(height: 33.0),
-                      Image.network(productImage),
-                      SizedBox(height: 33.0),
-                      Text('Enter Qty',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),
-                      SizedBox(height: 22.0),
-                      Form(
-                        key:_formKey,
+                child: Column(
+                  children: [
+                    Text(barTitle,textAlign: TextAlign.center,style: TextStyle(fontSize: 25.0),),
+                    SizedBox(height: 33.0),
+                    Padding(
+                      padding:EdgeInsets.fromLTRB(30.0,0,30,0),
+                      child: Container(decoration:BoxDecoration(
+                        border: Border.all(
+                          color:shareColor,
+                          width: 1.0,
+                        ),
+                      ),child: Image.network(productImage),),
+                    ),
+                    SizedBox(height: 33.0),
+                    Text('Enter Qty',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),
+                    SizedBox(height: 22.0),
+                    Form(
+                      key:_formKey,
+                      child: Container(
+                        height:43 ,
+                        width:112,
+                        decoration:BoxDecoration(
+                          border:Border.all(color:Colors.greenAccent[700],width: 2.0)
+                        ),
                         child: TextFormField(
                           controller:quantityContr,
                         ),
                       ),
-                      SizedBox(height: 22.0),
-                      Container(
-                        height:47,
-                        width:198,
-                        child: RaisedButton(
-                          child:Text(
-                            "SUBMIT",
-                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
-                          ),
-                          color: Colors.red,
-                          textColor: Colors.white,
-                          splashColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.0),
-                              side: BorderSide(color: Colors.red)),
-                          onPressed: () {
-                            quantityObj.postData(quantityContr.text,id.toString(),accessToken);
-                          },
+                    ),
+                    SizedBox(height: 22.0),
+                    Container(
+                      height:47,
+                      width:198,
+                      child: RaisedButton(
+                        child:Text(
+                          "SUBMIT",
+                          style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                         ),
+                        color: Colors.red,
+                        textColor: Colors.white,
+                        splashColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            side: BorderSide(color: Colors.red)),
+                        onPressed: () {
+                          quantityObj.postData(quantityContr.text,id.toString(),accessToken);
+                        },
                       ),
-                      StreamBuilder<BuyNowModel>(
-                          stream: quantityObj.quantityStream,
-                          builder: (context, snapshot) {
-                            if(snapshot.data!=null)
-                            {
-                              Fluttertoast.showToast(
-                                  msg:snapshot.data.userMsg,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.white,
-                                  textColor: Colors.red
-                              );
-                              if(quantityObj.statusCode==200) {
-                                // if(snapshot.data=='New password sent on email')
-                                Future.delayed(
-                                    const Duration(seconds: 1), () {
-                                  Navigator.pop(context);
-                                });
-                              }
-                            }
-                            //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
-                            return Text('');
-                          })
+                    ),
+                    StreamBuilder<BuyNowModel>(
+                        stream: quantityObj.quantityStream,
+                        builder: (context, snapshot) {
+                          if(snapshot.data!=null)
+                          {
+                            Fluttertoast.showToast(
+                                msg:snapshot.data.userMsg,
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.red
+                            );
+                            if(quantityObj.statusCode==200) {
+                              // if(snapshot.data=='New password sent on email')
+                              Future.delayed(
+                                  const Duration(seconds: 1), () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
 
-                    ],
-                  ),
+                              });
+                            }
+                          }
+                          //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                          return Text('');
+                        })
+
+                  ],
                 ),
               ),
             ),

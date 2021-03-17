@@ -5,6 +5,7 @@ import 'package:neostore_app/Screens/my_account.dart';
 import 'package:neostore_app/Screens/table_list.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
 import 'package:neostore_app/model_classes/usermodel.dart';
+import 'package:neostore_app/screens/my_cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 class HomeScreen extends StatefulWidget {
@@ -96,7 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: Icon(Icons.shopping_cart,color: Colors.white,size: 28.0), title: Text("My Cart",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyCart()));
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
@@ -190,27 +193,32 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GridView(
                   gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               children: [
-                Container(
-                  color: myHexColor1,
-                  margin: EdgeInsets.fromLTRB(13,15,5.5,5.5),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('Tables',style: TextStyle(fontSize: 23,color: Colors.white),),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.deck,color: Colors.white,size: 84.0),
-                          ],
-                        )
-                      ],
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TableList()));
+                  },
+                  child: Container(
+                    color: myHexColor1,
+                    margin: EdgeInsets.fromLTRB(13,15,5.5,5.5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('Tables',style: TextStyle(fontSize: 23,color: Colors.white),),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.deck,color: Colors.white,size: 84.0),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
