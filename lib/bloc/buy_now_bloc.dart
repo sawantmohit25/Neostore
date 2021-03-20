@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:neostore_app/model_classes/buynowmodel.dart';
-import 'package:neostore_app/model_classes/setratingmodel.dart';
 class BuyNowBloc{
   final stateStreamController=StreamController<BuyNowModel>.broadcast();
   StreamSink<BuyNowModel> get quantitySink =>stateStreamController.sink;

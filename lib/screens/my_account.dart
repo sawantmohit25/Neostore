@@ -47,12 +47,6 @@ class _MyAccountState extends State<MyAccount> {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
-          ),
-        ],
       ),
       body:SingleChildScrollView(
         child: Container(

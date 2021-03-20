@@ -77,24 +77,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (val.isEmpty) {
       return 'Required';
     }
-    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(val)) //Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char
-    {
-      return 'Please Enter A valid Password';
+    else if(val.toString().length<6) // Can be used Regex for extra validation Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
+        {
+      return 'Password should be minimum of 6 characters';
     }
-    if(passwordContr.text!=confirmPasswordContr.text){
+    else if(passwordContr.text!=confirmPasswordContr.text){
       return'Password Not Matched';
     }
-    return null;
+    else{
+      return null;
+    }
   }
   String validatePass(val) {
     if (val.isEmpty) {
       return 'Required';
     }
-    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(val)) //Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char
+    else if(val.toString().length<6) // Can be used Regex for extra validation Minimum 1 uppercase,lowercase,1 numeric number,1 special character,allow common char RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
         {
-      return 'Please Enter A valid Password';
+      return 'Password should be minimum of 6 characters';
     }
-    return null;
+    else{
+      return null;
+    }
   }
   @override
   void dispose() {

@@ -105,12 +105,6 @@ class _EditProfileState extends State<EditProfile> {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
-          ),
-        ],
       ),
       body:SingleChildScrollView(
         child: Container(

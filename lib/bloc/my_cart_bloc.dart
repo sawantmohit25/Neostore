@@ -16,7 +16,6 @@ class MyCartBloc{
       print(res.statusCode);
       MyCartModel cartList=MyCartModel.fromJson(body);
       myCartSink.add(cartList);
-      print('headshot${cartList}');
     }
     else{
       print(res.statusCode);

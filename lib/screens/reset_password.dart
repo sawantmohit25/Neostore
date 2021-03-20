@@ -22,6 +22,10 @@ class _ResetPassState extends State<ResetPass> {
     if (val.isEmpty) {
       return 'Required';
     }
+    else if(val.toString().length<6)
+        {
+      return 'Password should be minimum of 6 characters';
+    }
     else if(newPasswordContr.text!=confirmPasswordContr.text){
       return'Password Not Matched';
     }
@@ -33,6 +37,10 @@ class _ResetPassState extends State<ResetPass> {
     if (val.isEmpty) {
       return 'Required';
     }
+    else if(val.toString().length<6)
+        {
+      return 'Password should be minimum of 6 characters';
+    }
     else{
       return null;
     }
@@ -41,6 +49,10 @@ class _ResetPassState extends State<ResetPass> {
   String validateCurrentPass(val) {
     if (val.isEmpty) {
       return 'Required';
+    }
+    else if(val.toString().length<6)
+        {
+      return 'Password should be minimum of 6 characters';
     }
     else{
       return null;

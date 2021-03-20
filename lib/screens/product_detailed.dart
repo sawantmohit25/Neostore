@@ -8,6 +8,7 @@ import 'package:neostore_app/model_classes/productdetailmodel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:neostore_app/model_classes/setratingmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_share/flutter_share.dart';
 class ProductDetailed extends StatefulWidget {
   int id,initialRate;
   String productImage,appTitle;
@@ -27,6 +28,8 @@ class _ProductDetailedState extends State<ProductDetailed> {
   final ratingObj =SetRatingBloc();
   final quantityObj=BuyNowBloc();
   String centerImage,barTitle,accessToken;
+  // Color selectImageColor =Colors.white;
+  bool selectImageColor=false;
   var setRating;
   final _formKey = GlobalKey<FormState>();
   TextEditingController quantityContr = TextEditingController();
@@ -67,12 +70,6 @@ class _ProductDetailedState extends State<ProductDetailed> {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
-          ),
-        ],
       ),
       body: StreamBuilder<ProductDetails>(
         stream:detailObj.detailStream,
@@ -120,7 +117,9 @@ class _ProductDetailedState extends State<ProductDetailed> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text('Rs.${snapshot.data.data.cost.toString()}',style: TextStyle(color: Colors.red,fontSize: 23.0),),
-                                        IconButton(icon:Icon(Icons.share,size: 23.0,color:shareColor,), onPressed:(){})
+                                        IconButton(icon:Icon(Icons.share,size: 23.0,color:shareColor,), onPressed:(){
+                                          FlutterShare.share(text:'Title:-${barTitle} \n\n Description:-${snapshot.data.data.description}',title: barTitle,);
+                                        })
                                       ],
                                     ),
                                   ),
@@ -128,18 +127,35 @@ class _ProductDetailedState extends State<ProductDetailed> {
                                   SizedBox(height:6.0),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
-                                    child: Container(
-                                      height:80,
-                                      child: ListView.builder(itemBuilder:(context,index){
-                                        return Row(
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Container(
+                                        height:80,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            InkWell(onTap:(){
-                                              getImage(proImages[index].image);
-                                            } ,child: Container(child: Image.network(proImages[index].image)),),//height:78,width:69 not given not looking proper
-                                            SizedBox(width:10.0,)
+                                            ListView.builder(shrinkWrap: true,itemBuilder:(context,index){
+                                              return Row(
+                                                children: [
+                                                  InkWell(onTap:(){
+                                                    getImage(proImages[index].image);
+                                                    setState(() {
+                                                      if(selectImageColor==false){
+                                                        selectImageColor=true;
+                                                      }
+                                                      else{
+                                                        selectImageColor=false;
+                                                      }
+                                                      // selectImageColor=selectImageColor==Colors.white?Colors.red:Colors.white;
+                                                    });
+                                                  } ,child: Container( decoration: BoxDecoration(border: Border.all(color:selectImageColor==true?Colors.red:Colors.white)),child: Image.network(proImages[index].image,)),),//height:78,width:69 not given not looking proper
+                                                  SizedBox(width:10.0,)
+                                                ],
+                                              );
+                                            },itemCount: proImages.length,scrollDirection: Axis.horizontal,),
                                           ],
-                                        );
-                                      },itemCount: proImages.length,scrollDirection: Axis.horizontal,),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(height: 25.0),
