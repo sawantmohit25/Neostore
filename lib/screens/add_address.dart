@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neostore_app/bloc/add_address_bloc.dart';
 import 'package:neostore_app/model_classes/addaddressmodel.dart';
+import 'package:neostore_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class AddAddress extends StatefulWidget {
   @override
@@ -228,6 +229,16 @@ class _AddAddressState extends State<AddAddress> {
                               backgroundColor: Colors.white,
                               textColor: Colors.red
                           );
+                        }
+                        if(addAddressObj.statusCode==200) {
+                          // if(snapshot.data=='Logged In successfully')
+                          Future.delayed(
+                              const Duration(seconds: 1), () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) =>
+                                    HomeScreen()));
+                          });
                         }
                         return Text('');
                       }),

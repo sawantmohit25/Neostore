@@ -69,21 +69,22 @@ class _MyCartState extends State<MyCart> {
         stream:myCartObj.myCartStream,
         builder: (context,snapshot){
           if(snapshot.hasData){
+            if(snapshot.data.data!=null){
               postList.addAll(snapshot.data.data);
-            total=snapshot.data.total.toStringAsFixed(2);
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(physics: BouncingScrollPhysics(),shrinkWrap:true,itemBuilder:(context,index){
-                    return Column(
-                      children: [
-                        Slidable(
-                          actionPane: SlidableDrawerActionPane(),
-                          secondaryActions: [
-                            Container(height:45,width:45,decoration:BoxDecoration(color: Colors.red,shape: BoxShape.circle, border: Border.all(width: 2, color: Colors.red)),child: IconButton(icon:Icon(Icons.delete,color: Colors.white,),onPressed: (){
-                              deleteCartObj.postData(postList[index].productId.toString(),accessToken);
-                            },)),
-                          ],child: Container(
+              total=snapshot.data.total.toStringAsFixed(2);
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListView.builder(physics: BouncingScrollPhysics(),shrinkWrap:true,itemBuilder:(context,index){
+                      return Column(
+                        children: [
+                          Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            secondaryActions: [
+                              Container(height:45,width:45,decoration:BoxDecoration(color: Colors.red,shape: BoxShape.circle, border: Border.all(width: 2, color: Colors.red)),child: IconButton(icon:Icon(Icons.delete,color: Colors.white,),onPressed: (){
+                                deleteCartObj.postData(postList[index].productId.toString(),accessToken);
+                              },)),
+                            ],child: Container(
                             height: 90.0,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -150,7 +151,7 @@ class _MyCartState extends State<MyCart> {
                                         ],
                                         onChanged: (val) {
                                           editCartObj.postData(val,postList[index].productId.toString(),accessToken);
-                                                                                 },
+                                        },
                                         hint: Text(postList[index].quantity.toString()),
                                       ),
                                     ),
@@ -193,56 +194,62 @@ class _MyCartState extends State<MyCart> {
                                     style: TextStyle(fontSize: 15.0)),
                               ),),
                           ),
-                        ),
-                        Divider(height: 2.0, thickness: 2.0,)
-                      ],
-                    );
-                  },itemCount:postList.length,),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0,0,15.0,0),
-                    child: Container(
-                      height: 66.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('TOTAL',
-                              style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
-                          Text('₹ ${total}',
-                              style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
+                          ),
+                          Divider(height: 2.0, thickness: 2.0,)
                         ],
-                      ),
-                    ),
-                  ),
-                  Divider(height: 2.0, thickness: 2.0,),
-                  SizedBox(height: 20.0),
-                  Padding(
-                    padding:const EdgeInsets.fromLTRB(15.0,0,15.0,0),
-                    child: Container(
-                      height:47,
-                      width:double.infinity,
-                      child: RaisedButton(
-                        child:Text(
-                          "ORDER NOW",
-                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                      );
+                    },itemCount:postList.length,),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0,0,15.0,0),
+                      child: Container(
+                        height: 66.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('TOTAL',
+                                style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
+                            Text('₹ ${total}',
+                                style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
+                          ],
                         ),
-                        color:myHexColor,
-                        textColor: Colors.white,
-                        splashColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            side: BorderSide(color: Colors.red)),
-                        onPressed: () {
-                          Navigator.push(context,MaterialPageRoute(builder:(context) => AddAddress() ));
-                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
+                    Divider(height: 2.0, thickness: 2.0,),
+                    SizedBox(height: 20.0),
+                    Padding(
+                      padding:const EdgeInsets.fromLTRB(15.0,0,15.0,0),
+                      child: Container(
+                        height:47,
+                        width:double.infinity,
+                        child: RaisedButton(
+                          child:Text(
+                            "ORDER NOW",
+                            style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                          ),
+                          color:myHexColor,
+                          textColor: Colors.white,
+                          splashColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                              side: BorderSide(color: Colors.red)),
+                          onPressed: () {
+                            Navigator.push(context,MaterialPageRoute(builder:(context) => AddAddress() ));
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            else{
+              return Center(
+                child:Image.network('https://professionalscareer.com/assets/images/emptycart.png'),
+              );
+            }
           }
           else{
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
         },
       ) ,

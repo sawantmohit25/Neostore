@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neostore_app/Screens/login.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/services.dart';
-import 'package:neostore_app/Screens/home_screen.dart';
-import 'package:neostore_app/screens/add_address.dart';
-import 'package:neostore_app/screens/reset_password.dart';
 import 'package:neostore_app/screens/splash_screen.dart';
 void main() {
   runApp(MyApp());

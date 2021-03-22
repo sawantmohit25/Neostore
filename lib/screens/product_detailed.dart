@@ -134,7 +134,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            ListView.builder(shrinkWrap: true,itemBuilder:(context,index){
+                                            ListView.builder(physics:BouncingScrollPhysics(),shrinkWrap: true,itemBuilder:(context,index){
                                               return Row(
                                                 children: [
                                                   InkWell(onTap:(){
@@ -237,7 +237,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
 
           }
           else{
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
         }
       ),
