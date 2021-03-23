@@ -81,8 +81,14 @@ class _MyCartState extends State<MyCart> {
                           Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             secondaryActions: [
-                              Container(height:45,width:45,decoration:BoxDecoration(color: Colors.red,shape: BoxShape.circle, border: Border.all(width: 2, color: Colors.red)),child: IconButton(icon:Icon(Icons.delete,color: Colors.white,),onPressed: (){
+                              Container(height:45,width:45,decoration:BoxDecoration(color: Colors.red,shape: BoxShape.circle, border: Border.all(width: 2, color: Colors.red)),
+                                  child: IconButton(icon:Icon(Icons.delete,color: Colors.white,),
+                                    onPressed: (){
                                 deleteCartObj.postData(postList[index].productId.toString(),accessToken);
+                                postList.clear();
+                                Future.delayed(Duration(seconds:1),(){
+                                  myCartObj.getData(accessToken);
+                                });
                               },)),
                             ],child: Container(
                             height: 90.0,
@@ -151,6 +157,10 @@ class _MyCartState extends State<MyCart> {
                                         ],
                                         onChanged: (val) {
                                           editCartObj.postData(val,postList[index].productId.toString(),accessToken);
+                                          postList.clear();
+                                          Future.delayed(Duration(seconds:1),(){
+                                            myCartObj.getData(accessToken);
+                                          });
                                         },
                                         hint: Text(postList[index].quantity.toString()),
                                       ),
@@ -168,7 +178,6 @@ class _MyCartState extends State<MyCart> {
                                                 textColor: Colors.red
                                             );
                                           }
-                                          //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
                                           return Text('');
                                         }),
                                     StreamBuilder<DeleteCartModel>(

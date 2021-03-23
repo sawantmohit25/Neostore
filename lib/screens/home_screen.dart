@@ -7,6 +7,7 @@ import 'package:neostore_app/bloc/login_bloc.dart';
 import 'package:neostore_app/model_classes/usermodel.dart';
 import 'package:neostore_app/screens/my_cart.dart';
 import 'package:neostore_app/screens/my_orders.dart';
+import 'package:neostore_app/screens/store_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 class HomeScreen extends StatefulWidget {
@@ -146,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: Icon(Icons.location_on_outlined,color: Colors.white,size: 28.0), title: Text("Store Locator",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,MaterialPageRoute(builder:(context) => StoreLocator()));
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),

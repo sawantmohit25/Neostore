@@ -18,7 +18,7 @@ class ProductDetailed extends StatefulWidget {
 }
 
 class _ProductDetailedState extends State<ProductDetailed> {
-  int id,initialRate;
+  int id,initialRate,position=0;
   String productImage,appTitle;
   _ProductDetailedState(this.id,this.productImage,this.appTitle,this.initialRate);
   Color myHexColor1 = Color(0xfffe3f3f);
@@ -28,8 +28,6 @@ class _ProductDetailedState extends State<ProductDetailed> {
   final ratingObj =SetRatingBloc();
   final quantityObj=BuyNowBloc();
   String centerImage,barTitle,accessToken;
-  // Color selectImageColor =Colors.white;
-  bool selectImageColor=false;
   var setRating;
   final _formKey = GlobalKey<FormState>();
   TextEditingController quantityContr = TextEditingController();
@@ -138,17 +136,11 @@ class _ProductDetailedState extends State<ProductDetailed> {
                                               return Row(
                                                 children: [
                                                   InkWell(onTap:(){
-                                                    getImage(proImages[index].image);
                                                     setState(() {
-                                                      if(selectImageColor==false){
-                                                        selectImageColor=true;
-                                                      }
-                                                      else{
-                                                        selectImageColor=false;
-                                                      }
-                                                      // selectImageColor=selectImageColor==Colors.white?Colors.red:Colors.white;
+                                                      position=index;
                                                     });
-                                                  } ,child: Container( decoration: BoxDecoration(border: Border.all(color:selectImageColor==true?Colors.red:Colors.white)),child: Image.network(proImages[index].image,)),),//height:78,width:69 not given not looking proper
+                                                    getImage(proImages[index].image);} ,
+                                                      child:Container( decoration: BoxDecoration(border: Border.all(color:position==index?Colors.red:Colors.white)),child: Image.network(proImages[index].image,))),//height:78,width:69 not given not looking proper
                                                   SizedBox(width:10.0,)
                                                 ],
                                               );
