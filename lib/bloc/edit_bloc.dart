@@ -23,7 +23,7 @@ class EditBloc {
       "email": email,
       "phone_no": phoneNo,
       "dob": dob,
-      "profile_pic":"data:image/jpg;base64,"+img,
+      "profile_pic":img,
     },headers: {"access_token":accessToken});
     if (response.statusCode == 200) {
       print(response.statusCode);

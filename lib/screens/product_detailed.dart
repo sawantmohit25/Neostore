@@ -7,6 +7,7 @@ import 'package:neostore_app/model_classes/buynowmodel.dart';
 import 'package:neostore_app/model_classes/productdetailmodel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:neostore_app/model_classes/setratingmodel.dart';
+import 'package:neostore_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_share/flutter_share.dart';
 class ProductDetailed extends StatefulWidget {
@@ -29,6 +30,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
   final quantityObj=BuyNowBloc();
   String centerImage,barTitle,accessToken;
   var setRating;
+  bool isLoading=false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController quantityContr = TextEditingController();
   @override
@@ -425,6 +427,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
                       ),
                     ),
                     SizedBox(height: 22.0),
+                    isLoading==false?
                     Container(
                       height:47,
                       width:198,
@@ -440,10 +443,14 @@ class _ProductDetailedState extends State<ProductDetailed> {
                             borderRadius: BorderRadius.circular(6.0),
                             side: BorderSide(color: Colors.red)),
                         onPressed: () {
+                          setState(() {
+                            isLoading=!isLoading;
+                          });
+                          print(isLoading);
                           quantityObj.postData(quantityContr.text,id.toString(),accessToken);
                         },
                       ),
-                    ),
+                    ):CircularProgressIndicator(),
                     StreamBuilder<BuyNowModel>(
                         stream: quantityObj.quantityStream,
                         builder: (context, snapshot) {
@@ -460,11 +467,15 @@ class _ProductDetailedState extends State<ProductDetailed> {
                               // if(snapshot.data=='New password sent on email')
                               Future.delayed(
                                   const Duration(seconds: 1), () {
+                                    isLoading=false;
                                 Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-
+                                // Navigator.pushAndRemoveUntil(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (BuildContext context) => HomeScreen(),
+                                //   ),
+                                //       (route) => false,
+                                // );
                               });
                             }
                           }

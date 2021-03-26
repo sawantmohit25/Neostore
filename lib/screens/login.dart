@@ -241,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height:46 ,
                       color:myHexColor,
                       child: IconButton(icon:Icon(Icons.add,size:32,),color:Colors.white, onPressed:(){
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => RegisterScreen()));
 

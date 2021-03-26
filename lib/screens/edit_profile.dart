@@ -7,6 +7,7 @@ import 'dart:core';
 import 'package:image_picker/image_picker.dart';
 import 'package:neostore_app/bloc/edit_bloc.dart';
 import 'package:neostore_app/screens/login.dart';
+import 'package:neostore_app/screens/my_account.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class EditProfile extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   final editObj=EditBloc();
   String base64Image;
+  bool isLoading=false;
 @override
   void initState() {
     getData();
@@ -122,10 +124,14 @@ class _EditProfileState extends State<EditProfile> {
                           child: Container(
                             width: 133.0,
                             height:133.0,
-                            decoration: BoxDecoration(
+                            decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
+                            child: profilePic==null && _image==null?
+                            Container(child:Center(child:firstNameContr.text.isNotEmpty?Text(firstNameContr.text[0]+lastNameContr.text[0],textAlign:TextAlign.center,style: TextStyle(fontSize:40,color: Colors.red),):Text('')),):
+                            Container(decoration:BoxDecoration(
                               shape: BoxShape.circle,
-                              image: DecorationImage(image:_image!=null?FileImage(File(_image.path)): NetworkImage(profilePic!=null?profilePic:'https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
+                              image: DecorationImage(image:_image!=null?FileImage(File(_image.path)): NetworkImage(profilePic),
                                   fit: BoxFit.fill),),
+                            )
                           ),
                           onTap:(){
                             pickImage();
@@ -256,22 +262,30 @@ class _EditProfileState extends State<EditProfile> {
                             },
                           ),
                           SizedBox(height: 13.0),
-                          Container(
+                          isLoading==false?Container(
                             height:47,
                             width:double.infinity,
                             child: RaisedButton(
                               onPressed: (){
-                                setState(() {
-                                  navError=true;
-                                });
                                 if(_formKey.currentState.validate()) {
+                                  setState(() {
+                                    navError=true;
+                                    isLoading=!isLoading;
+                                  });
                                   final String firstName=firstNameContr.text;
                                   final String lastName=lastNameContr.text;
                                   final String email=emailContr.text;
                                   final String phoneNo=phoneNoContr.text;
                                   final String dob=dobContr.text;
-                                  final String img=base64Image;
-                                  editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                  String img=base64Image;
+                                  if(img==null){
+                                    img='';
+                                    editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                  }
+                                  else{
+                                    img="data:image/jpg;base64,"+img;
+                                    editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                  }
                                 }
                               },
                               child: Text(
@@ -285,7 +299,7 @@ class _EditProfileState extends State<EditProfile> {
                                   borderRadius: BorderRadius.circular(6.0),
                                   side: BorderSide(color: Colors.red)),
                             ),
-                          ),
+                          ):CircularProgressIndicator(),
                           navError==true?
                           StreamBuilder<String>(
                               stream: editObj.editStream,
@@ -304,10 +318,11 @@ class _EditProfileState extends State<EditProfile> {
                                     // if(snapshot.data=='Logged In successfully')
                                     Future.delayed(
                                         const Duration(seconds: 1), () {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) =>
-                                              LoginScreen()));
+                                          Navigator.pop(context,true);
+                                      // Navigator.pushReplacement(
+                                      //     context,
+                                      //     MaterialPageRoute(builder: (context) =>
+                                      //         MyAccount()));
                                     });
                                   }
                                 }

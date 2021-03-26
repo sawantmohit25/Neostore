@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:neostore_app/model_classes/mycartmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyCartBloc{
   final stateStreamController =StreamController<MyCartModel>.broadcast();
@@ -15,6 +16,11 @@ class MyCartBloc{
     if(res.statusCode==200){
       print(res.statusCode);
       MyCartModel cartList=MyCartModel.fromJson(body);
+      print (body);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('count',cartList.count.toString());
+      print(cartList.count);
+      print('chote');
       myCartSink.add(cartList);
     }
     else{

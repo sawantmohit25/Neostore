@@ -7,6 +7,7 @@ import 'package:neostore_app/model_classes/deletecartmodel.dart';
 import 'package:neostore_app/model_classes/mycartmodel.dart';
 import 'package:neostore_app/model_classes/editcartmodel.dart';
 import 'package:neostore_app/screens/add_address.dart';
+import 'package:neostore_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 class MyCart extends StatefulWidget {
@@ -38,6 +39,9 @@ class _MyCartState extends State<MyCart> {
     });
      myCartObj.getData(accessToken);
   }
+  getRequest() async{
+    getAccessToken();
+  }
   @override
   void dispose() {
     myCartObj.dispose();
@@ -55,7 +59,8 @@ class _MyCartState extends State<MyCart> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_sharp),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context,true);
+            // Navigator.pushReplacement(context,MaterialPageRoute(builder:(context) =>HomeScreen() ));
           },
         ),
         actions: <Widget>[
@@ -242,7 +247,7 @@ class _MyCartState extends State<MyCart> {
                               borderRadius: BorderRadius.circular(6.0),
                               side: BorderSide(color: Colors.red)),
                           onPressed: () {
-                            Navigator.push(context,MaterialPageRoute(builder:(context) => AddAddress() ));
+                            Navigator.push(context,MaterialPageRoute(builder:(context) => AddAddress() )).then((value) =>value?getRequest():null);
                           },
                         ),
                       ),

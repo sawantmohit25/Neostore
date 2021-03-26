@@ -1,10 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:neostore_app/Screens/login.dart';
 import 'package:neostore_app/Screens/my_account.dart';
 import 'package:neostore_app/Screens/table_list.dart';
 import 'package:neostore_app/bloc/login_bloc.dart';
-import 'package:neostore_app/model_classes/usermodel.dart';
+import 'package:neostore_app/bloc/my_cart_bloc.dart';
+import 'package:neostore_app/model_classes/mycartmodel.dart';
 import 'package:neostore_app/screens/my_cart.dart';
 import 'package:neostore_app/screens/my_orders.dart';
 import 'package:neostore_app/screens/store_locator.dart';
@@ -18,9 +20,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
-  String firstName,lastName,email,profilePic;
+  String firstName,lastName,email,profilePic,accessToken,count;
   final data=LoginBloc();
-  
+  final myCartObj1=MyCartBloc();
+  int cartCount=0;
   @override
   void initState() {
       getData();
@@ -34,7 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
       lastName=prefs.getString("key2");
       email=prefs.getString("key3");
       profilePic=prefs.getString("key8");
+      accessToken=prefs.getString("key7");
+      count=prefs.getString('count');
     });
+    myCartObj1.myCartStream.listen((myCartModel) {
+      if(myCartModel.data!=null){
+        setState(() {
+          cartCount=myCartModel.data.length;
+        });
+      }
+      else{
+        setState(() {
+          cartCount=0;
+        });
+      }
+    });
+    myCartObj1.getData(accessToken);
+    print('mandar${accessToken}');
+  }
+  getRequest() async{
+    getData();
   }
   @override
   Widget build(BuildContext context) {
@@ -68,15 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     child:Column(
                             children: [
                               SizedBox(height: 37.0),
-                              Container(
+                              profilePic!=null?Container(
                                 width: 83,
                                 height: 83,
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(image: NetworkImage(profilePic!=null?profilePic:'https://www.pngitem.com/pimgs/m/4-40070_user-staff-man-profile-user-account-icon-jpg.png'),
+                                  image: DecorationImage(image: NetworkImage(profilePic),
                                       fit: BoxFit.fill),),
-                              ),
+                              ):Container(
+                                width: 83.0,
+                                height:83.0,
+                                decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
+                                child:Center(child: Text(firstName!=null&& lastName!=null?firstName[0]+lastName[0]:'',textAlign:TextAlign.center,style: TextStyle(fontSize:30,color: Colors.red),)),),
                               SizedBox(height: 18.0),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -96,21 +122,35 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height:13.0),
               Divider(color: Colors.black,height: 2.0,),
-              ListTile(
-                leading: Icon(Icons.shopping_cart,color: Colors.white,size: 28.0), title: Text("My Cart",style: TextStyle(color: Colors.white,fontSize:16.0),),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyCart()));
-                },
-              ),
+          ListTile(
+            leading: Icon(Icons.shopping_cart, color: Colors.white, size: 28.0),
+                        title: Text(
+                          "My Cart",
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        ),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MyCart())).then((value) => value?getRequest():null);
+                        },
+                        trailing:cartCount!=0?Container(
+                          height: 26.0,
+                          width: 26.0,
+                          child: Text(cartCount.toString(),style: TextStyle(fontSize: 15.0, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 2, color: Colors.red)),
+                        ):Text(''),
+                      ),
               Divider(color: Colors.black,height: 2.0,),
               ListTile(
                 leading: Icon(Icons.deck,color: Colors.white,size: 28.0), title: Text("Tables",style: TextStyle(color: Colors.white,fontSize:16.0),),
                 onTap: () {
                   Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TableList()));
+                        MaterialPageRoute(builder: (context) => TableList())).then((value) => value?getRequest():null);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),
@@ -140,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyAccount()));
+                      MaterialPageRoute(builder: (context) => MyAccount())).then((value) => value?getRequest():null);
                 },
               ),
               Divider(color: Colors.black,height: 2.0,),

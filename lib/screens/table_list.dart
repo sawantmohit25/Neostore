@@ -65,7 +65,7 @@ class _TableListState extends State<TableList> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_sharp),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context,true);
           },
         ),
         actions: <Widget>[

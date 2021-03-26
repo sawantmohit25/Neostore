@@ -234,10 +234,7 @@ class _AddAddressState extends State<AddAddress> {
                           // if(snapshot.data=='Logged In successfully')
                           Future.delayed(
                               const Duration(seconds: 1), () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>
-                                    HomeScreen()));
+                            Navigator.pop(context,true);
                           });
                         }
                         return Text('');
