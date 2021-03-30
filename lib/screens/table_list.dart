@@ -16,7 +16,14 @@ class _TableListState extends State<TableList> {
   Color myHexColor1 = Color(0xfffe3f3f);
   Color myHexColor = Color(0xffe91c1a);
   final tableObj = TableListBloc();
+  bool isSearching=false;
+  TextEditingController searchController=TextEditingController();
   List<Data> postList=List();
+  List<Data> tablesForDisplay=List();
+  Future<bool> onBackPressed() async{
+    Navigator.pop(context,true);
+    return true;
+  }
   @override
   void initState() {
     tableObj.getData(pageNumber);
@@ -56,87 +63,111 @@ class _TableListState extends State<TableList> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:AppBar(
-        title: Text('Tables'),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: myHexColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_sharp),
-          onPressed: () {
-            Navigator.pop(context,true);
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
+    return WillPopScope(
+      onWillPop:onBackPressed,
+      child: Scaffold(
+        appBar:AppBar(
+          title:isSearching==false?Text('Tables'):TextField(style:TextStyle(color: Colors.white),decoration: InputDecoration(icon:Icon(Icons.search,color: Colors.white,),hintText: 'Search Tables Here',hintStyle: TextStyle(color:Colors.white)),
+              onChanged:(text){
+            text=text.toLowerCase();
+            setState(() {
+              tablesForDisplay=postList.where((element){
+                var tables=element.name.toLowerCase();
+                return tables.contains(text);
+              }).toList();
+            });
+              }),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: myHexColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp),
+            onPressed: () {
+              Navigator.pop(context,true);
+            },
           ),
-        ],
-      ),
-      body:Container(
-        child:StreamBuilder<ProductList>(
-          stream:tableObj.loginStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              postList.addAll(snapshot.data.data);
-              return ListView.builder(controller:_scrollController,physics:BouncingScrollPhysics(),itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 93.0,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
-                        child: ListTile(
-                          onTap: (){
-                            Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed(id: postList[index].id,productImage:postList[index].productImages,appTitle:postList[index].name,initialRate: postList[index].rating,)));
-                          },
-                          leading: Container(child: Image.network(
-                              postList[index].productImages),
-                              height: 73,
-                              width: 66),
-                          title: Text(postList[index].name,
-                              style: TextStyle(fontSize: 15.0)),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(postList[index].producer,
-                                  style: TextStyle(fontSize: 10.0)),
-                              SizedBox(height: 16.0),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 6.0),
-                                child: Text(
-                                  'Rs. ${postList[index].cost.toString()}',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 20.0),),
-                              ),
-                            ],
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              productRating(postList[index].rating),
-                            ],
+          actions: <Widget>[
+            isSearching==false?IconButton(
+              onPressed: () {
+                setState(() {
+                  isSearching=true;
+                });
+              },
+              icon: Icon(Icons.search),
+            ):IconButton(
+              onPressed: () {
+                setState(() {
+                  isSearching=false;
+                });
+              },
+              icon: Icon(Icons.cancel),
+            )
+          ],
+        ),
+        body:Container(
+          child:StreamBuilder<ProductList>(
+            stream:tableObj.loginStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                postList.addAll(snapshot.data.data);
+                tablesForDisplay=postList;
+                return ListView.builder(controller:_scrollController,physics:BouncingScrollPhysics(),itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: 93.0,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
+                          child: ListTile(
+                            onTap: (){
+                              Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed(id: postList[index].id,productImage:postList[index].productImages,appTitle:postList[index].name,initialRate: postList[index].rating,)));
+                            },
+                            leading: Container(child: Image.network(
+                                tablesForDisplay[index].productImages),
+                                height: 73,
+                                width: 66),
+                            title: Text(tablesForDisplay[index].name,
+                                style: TextStyle(fontSize: 15.0)),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(tablesForDisplay[index].producer,
+                                    style: TextStyle(fontSize: 10.0)),
+                                SizedBox(height: 16.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 6.0),
+                                  child: Text(
+                                    'Rs. ${tablesForDisplay[index].cost.toString()}',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 20.0),),
+                                ),
+                              ],
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                productRating(tablesForDisplay[index].rating),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Divider(height: 2.0, thickness: 2.0,)
-                  ],
+                      Divider(height: 2.0, thickness: 2.0,)
+                    ],
+                  );
+                },
+                  itemCount: tablesForDisplay.length,);
+              }
+              else{
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor:AlwaysStoppedAnimation<Color>(Colors.red),
+                  ),
                 );
-              },
-                itemCount: postList.length,);
+              }
             }
-            else{
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor:AlwaysStoppedAnimation<Color>(Colors.red),
-                ),
-              );
-            }
-          }
-        )
+          )
+        ),
       ),
     );
   }

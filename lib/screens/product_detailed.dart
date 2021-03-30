@@ -33,6 +33,10 @@ class _ProductDetailedState extends State<ProductDetailed> {
   bool isLoading=false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController quantityContr = TextEditingController();
+  Future<bool> onBackPressed() async{
+    Navigator.pop(context,true);
+    return true;
+  }
   @override
   void initState() {
   detailObj.getData(id);
@@ -57,183 +61,186 @@ class _ProductDetailedState extends State<ProductDetailed> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar:AppBar(
-        title:Text(barTitle),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: myHexColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_sharp),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop:onBackPressed,
+      child: Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar:AppBar(
+          title:Text(barTitle),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: myHexColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-      ),
-      body: StreamBuilder<ProductDetails>(
-        stream:detailObj.detailStream,
-        builder: (context, snapshot) {
-          if(snapshot.hasData){
-            List<ProductImages> proImages=snapshot.data.data.productImages;
-            return SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          child:Padding(
-                            padding: const EdgeInsets.fromLTRB(13.0,10.0,13.0,10.0),
-                            child: Column(
-                              crossAxisAlignment:CrossAxisAlignment.stretch,
-                              children: [
-                                Text(snapshot.data.data.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19.0),),
-                                Text('Category - Tables',style: TextStyle(fontSize: 16.0),),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(snapshot.data.data.producer,style: TextStyle(fontSize: 10.0,color: Colors.grey),),
-                                    Container(height:10.0,width:60.0,child:productRating(snapshot.data.data.rating),)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ) ,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(13.0,16.0,13.0,16.0),
-                          child: Container(
-                            decoration:BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-
-                            ),
-                            child:Container(
-                              color: Colors.white,
+        body: StreamBuilder<ProductDetails>(
+          stream:detailObj.detailStream,
+          builder: (context, snapshot) {
+            if(snapshot.hasData){
+              List<ProductImages> proImages=snapshot.data.data.productImages;
+              return SingleChildScrollView(
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            child:Padding(
+                              padding: const EdgeInsets.fromLTRB(13.0,10.0,13.0,10.0),
                               child: Column(
+                                crossAxisAlignment:CrossAxisAlignment.stretch,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Rs.${snapshot.data.data.cost.toString()}',style: TextStyle(color: Colors.red,fontSize: 23.0),),
-                                        IconButton(icon:Icon(Icons.share,size: 23.0,color:shareColor,), onPressed:(){
-                                          FlutterShare.share(text:'Title:-${barTitle} \n\n Description:-${snapshot.data.data.description}',title: barTitle,);
-                                        })
-                                      ],
-                                    ),
+                                  Text(snapshot.data.data.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19.0),),
+                                  Text('Category - Tables',style: TextStyle(fontSize: 16.0),),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(snapshot.data.data.producer,style: TextStyle(fontSize: 10.0,color: Colors.grey),),
+                                      Container(height:10.0,width:60.0,child:productRating(snapshot.data.data.rating),)
+                                    ],
                                   ),
-                                  Container(height:178,width:257,child:Image.network(centerImage!=null?centerImage:'https://cdn.shopify.com/s/files/1/0031/8809/7069/products/1.jpg?v=1568630114'),),
-                                  SizedBox(height:6.0),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
+                                ],
+                              ),
+                            ) ,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(13.0,16.0,13.0,16.0),
+                            child: Container(
+                              decoration:BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+
+                              ),
+                              child:Container(
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Rs.${snapshot.data.data.cost.toString()}',style: TextStyle(color: Colors.red,fontSize: 23.0),),
+                                          IconButton(icon:Icon(Icons.share,size: 23.0,color:shareColor,), onPressed:(){
+                                            FlutterShare.share(text:'Title:-${barTitle} \n\n Description:-${snapshot.data.data.description}',title: barTitle,);
+                                          })
+                                        ],
+                                      ),
+                                    ),
+                                    Container(height:178,width:257,child:Image.network(centerImage!=null?centerImage:'https://cdn.shopify.com/s/files/1/0031/8809/7069/products/1.jpg?v=1568630114'),),
+                                    SizedBox(height:6.0),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Container(
+                                          height:80,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              ListView.builder(physics:BouncingScrollPhysics(),shrinkWrap: true,itemBuilder:(context,index){
+                                                return Row(
+                                                  children: [
+                                                    InkWell(onTap:(){
+                                                      setState(() {
+                                                        position=index;
+                                                      });
+                                                      getImage(proImages[index].image);} ,
+                                                        child:Container( decoration: BoxDecoration(border: Border.all(color:position==index?Colors.red:Colors.white)),child: Image.network(proImages[index].image,))),//height:78,width:69 not given not looking proper
+                                                    SizedBox(width:10.0,)
+                                                  ],
+                                                );
+                                              },itemCount: proImages.length,scrollDirection: Axis.horizontal,),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 25.0),
+                                    Divider(height: 3.0,color: Colors.grey,),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Container(
-                                        height:80,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        child: Column(
                                           children: [
-                                            ListView.builder(physics:BouncingScrollPhysics(),shrinkWrap: true,itemBuilder:(context,index){
-                                              return Row(
-                                                children: [
-                                                  InkWell(onTap:(){
-                                                    setState(() {
-                                                      position=index;
-                                                    });
-                                                    getImage(proImages[index].image);} ,
-                                                      child:Container( decoration: BoxDecoration(border: Border.all(color:position==index?Colors.red:Colors.white)),child: Image.network(proImages[index].image,))),//height:78,width:69 not given not looking proper
-                                                  SizedBox(width:10.0,)
-                                                ],
-                                              );
-                                            },itemCount: proImages.length,scrollDirection: Axis.horizontal,),
+                                            Row(
+                                              children: [
+                                                Text('DESCRIPTION',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10.0),),
+                                              ],
+                                            ),
+                                            SizedBox(height:5.0),
+                                            Text(snapshot.data.data.description,style: TextStyle(fontSize: 10.0),),
                                           ],
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 25.0),
-                                  Divider(height: 3.0,color: Colors.grey,),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text('DESCRIPTION',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10.0),),
-                                            ],
-                                          ),
-                                          SizedBox(height:5.0),
-                                          Text(snapshot.data.data.description,style: TextStyle(fontSize: 10.0),),
-                                        ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(13.0,8.0,13.0,8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    height:45,
+                                    width:150,
+                                    child: RaisedButton(
+                                      onPressed: () {
+                                        buyNow(context);
+                                      },
+                                      child: Text(
+                                        "BUY NOW",
+                                        style: TextStyle(
+                                            fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
                                       ),
+                                      color: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(6.0),
+                                      ),
+
+                                    ),
+                                  ),
+                                  Container(
+                                    height:45,
+                                    width:150,
+                                    child: RaisedButton(
+                                      onPressed: () {
+                                        rateProduct(context);
+                                      },
+                                      child: Text(
+                                        "RATE",
+                                        style: TextStyle(
+                                            fontSize: 20, fontWeight: FontWeight.bold,color:Colors.grey[700]),
+                                      ),
+                                      color: Colors.grey[300],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(6.0),
+                                      ),
+
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(13.0,8.0,13.0,8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  height:45,
-                                  width:150,
-                                  child: RaisedButton(
-                                    onPressed: () {
-                                      buyNow(context);
-                                    },
-                                    child: Text(
-                                      "BUY NOW",
-                                      style: TextStyle(
-                                          fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
-                                    ),
-                                    color: Colors.red,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
-
-                                  ),
-                                ),
-                                Container(
-                                  height:45,
-                                  width:150,
-                                  child: RaisedButton(
-                                    onPressed: () {
-                                      rateProduct(context);
-                                    },
-                                    child: Text(
-                                      "RATE",
-                                      style: TextStyle(
-                                          fontSize: 20, fontWeight: FontWeight.bold,color:Colors.grey[700]),
-                                    ),
-                                    color: Colors.grey[300],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
-
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
+                  );
 
+            }
+            else{
+              return Center(child: CircularProgressIndicator());
+            }
           }
-          else{
-            return Center(child: CircularProgressIndicator());
-          }
-        }
+        ),
       ),
     );
   }
@@ -312,7 +319,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            insetPadding: EdgeInsets.fromLTRB(20,70.0,20,180.0),
+            insetPadding: EdgeInsets.fromLTRB(20,70.0,20,100.0),
             title:Text(barTitle,textAlign: TextAlign.center,),
             content:Container(
               child: Column(
@@ -326,7 +333,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
                 initialRating:initialRate.toDouble(),
                 minRating: 1,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                // allowHalfRating: true,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
                 itemBuilder: (context, _) => Icon(
@@ -353,7 +360,13 @@ class _ProductDetailedState extends State<ProductDetailed> {
                           borderRadius: BorderRadius.circular(6.0),
                           side: BorderSide(color: Colors.red)),
                       onPressed: () {
-                        ratingObj.postData(setRating,id.toString());
+                        if(setRating!=null){
+                          ratingObj.postData(setRating,id.toString());
+                        }
+                        else{
+                          setRating=initialRate.toString();
+                          ratingObj.postData(setRating,id.toString());
+                        }
                       },
                     ),
                   ),

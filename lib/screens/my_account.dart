@@ -36,6 +36,10 @@ class _MyAccountState extends State<MyAccount> {
   getRequest() async{
     getAccessToken();
   }
+  Future<bool> onBackPressed() async{
+    Navigator.pop(context,true);
+    return true;
+  }
   // getData() async{
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   setState(() {
@@ -50,153 +54,156 @@ class _MyAccountState extends State<MyAccount> {
   // }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:myHexColor1,
-      appBar: AppBar(
-        title: Text('My Account'),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: myHexColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_sharp),
-          onPressed: () {
-            Navigator.pop(context,true);
-            // Navigator.pushReplacement(context,MaterialPageRoute(builder:(context) => HomeScreen()));
-          },
+    return WillPopScope(
+      onWillPop:onBackPressed,
+      child: Scaffold(
+        backgroundColor:myHexColor1,
+        appBar: AppBar(
+          title: Text('My Account'),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: myHexColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp),
+            onPressed: () {
+              Navigator.pop(context,true);
+              // Navigator.pushReplacement(context,MaterialPageRoute(builder:(context) => HomeScreen()));
+            },
+          ),
         ),
-      ),
-      body:SingleChildScrollView(
-        child: StreamBuilder<FetchDetailsModel>(
-          stream:fetchDetailsObj.fetchStream,
-          builder: (context, snapshot) {
-           if(snapshot.hasData){
-             return Container(
-               child: Column(
-                 children: [
-                   Padding(
-                     padding:EdgeInsets.fromLTRB(33.0,0,33.0,0),
-                     child: Column(
-                       children: [
-                         SizedBox(height: 20.0),
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.center,
-                           children: [
-                             snapshot.data.data.userData.profilePic!=null?Container(
-                               width: 133.0,
-                               height:133.0,
-                               decoration: BoxDecoration(
-                                 shape: BoxShape.circle,
-                                 image: DecorationImage(image: NetworkImage(snapshot.data.data.userData.profilePic), fit: BoxFit.fill),),
-                             ):Container(
-                               width: 133.0,
-                               height:133.0,
-                               decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
-                               child:Center(child: Text(snapshot.data.data.userData.firstName[0]+snapshot.data.data.userData.lastName[0],textAlign:TextAlign.center,style: TextStyle(fontSize:40,color: Colors.red),)),)
-                           ],
-                         ),
-                         SizedBox(height: 20.0),
-                         TextField(
-                           decoration: InputDecoration(
-                             disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                             prefixIcon:Icon(Icons.person,color:Colors.white),
-                             labelText:snapshot.data.data.userData.firstName,
-                             labelStyle:TextStyle(color:Colors.white),
+        body:SingleChildScrollView(
+          child: StreamBuilder<FetchDetailsModel>(
+            stream:fetchDetailsObj.fetchStream,
+            builder: (context, snapshot) {
+             if(snapshot.hasData){
+               return Container(
+                 child: Column(
+                   children: [
+                     Padding(
+                       padding:EdgeInsets.fromLTRB(33.0,0,33.0,0),
+                       child: Column(
+                         children: [
+                           SizedBox(height: 20.0),
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               snapshot.data.data.userData.profilePic!=null?Container(
+                                 width: 133.0,
+                                 height:133.0,
+                                 decoration: BoxDecoration(
+                                   shape: BoxShape.circle,
+                                   image: DecorationImage(image: NetworkImage(snapshot.data.data.userData.profilePic), fit: BoxFit.fill),),
+                               ):Container(
+                                 width: 133.0,
+                                 height:133.0,
+                                 decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
+                                 child:Center(child: Text(snapshot.data.data.userData.firstName[0]+snapshot.data.data.userData.lastName[0],textAlign:TextAlign.center,style: TextStyle(fontSize:40,color: Colors.red),)),)
+                             ],
                            ),
-                           enabled: false,
-                         ),
-                         SizedBox(height: 13.0),
-                         TextField(
-                           decoration: InputDecoration(
-                             disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                             prefixIcon:Icon(Icons.person,color:Colors.white),
-                             labelText:snapshot.data.data.userData.lastName,
-                             labelStyle:TextStyle(color:Colors.white),
-                           ),
-                           enabled: false,
-                         ),
-                         SizedBox(height: 13.0),
-                         TextField(
-                           decoration: InputDecoration(
-                             disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                             prefixIcon:Icon(Icons.email,color:Colors.white),
-                             labelText:snapshot.data.data.userData.email,
-                             labelStyle:TextStyle(color:Colors.white),
-                           ),
-                           enabled: false,
-                         ),
-                         SizedBox(height: 13.0),
-                         TextField(
-                           decoration: InputDecoration(
-                             disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                             prefixIcon:Icon(Icons.phone_android,color:Colors.white),
-                             labelText:snapshot.data.data.userData.phoneNo,
-                             labelStyle:TextStyle(color:Colors.white),
-                           ),
-                           enabled: false,
-                         ),
-                         SizedBox(height: 13.0),
-                         TextField(
-                           decoration: InputDecoration(
-                             disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                             prefixIcon:Icon(Icons.cake,color:Colors.white),
-                             labelText:snapshot.data.data.userData.dob!=null?snapshot.data.data.userData.dob:'Edit your DoB',
-                             labelStyle:TextStyle(color:Colors.white),
-                           ),
-                           enabled: false,
-                         ),
-                         SizedBox(height: 20.0),
-                         Container(
-                           height:47,
-                           width:double.infinity,
-                           child: RaisedButton(
-                             onPressed: (){
-                               Navigator.push(context,MaterialPageRoute(builder:(context) => EditProfile())).then((value) => value?getRequest():null);
-                             },
-                             child: Text(
-                               "EDIT PROFILE",
-                               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                           SizedBox(height: 20.0),
+                           TextField(
+                             decoration: InputDecoration(
+                               disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                               prefixIcon:Icon(Icons.person,color:Colors.white),
+                               labelText:snapshot.data.data.userData.firstName,
+                               labelStyle:TextStyle(color:Colors.white),
                              ),
-                             color: Colors.white,
-                             textColor: Colors.red,
-                             splashColor: Colors.red,
-                             shape: RoundedRectangleBorder(
-                                 borderRadius: BorderRadius.circular(6.0),
-                                 side: BorderSide(color: Colors.red)),
+                             enabled: false,
                            ),
-                         ),
-                       ],
-                     ),
-                   ),
-                   SizedBox(height:36),
-                   Container(
-                     height: 52.0,
-                     width: double.infinity,
-                     child: RaisedButton(
-                       onPressed: (){
-                         Navigator.push(context,MaterialPageRoute(builder:(context) => ResetPass()));
-                       },
-                       child: Text(
-                         "RESET PASSWORD",
-                         style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),
+                           SizedBox(height: 13.0),
+                           TextField(
+                             decoration: InputDecoration(
+                               disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                               prefixIcon:Icon(Icons.person,color:Colors.white),
+                               labelText:snapshot.data.data.userData.lastName,
+                               labelStyle:TextStyle(color:Colors.white),
+                             ),
+                             enabled: false,
+                           ),
+                           SizedBox(height: 13.0),
+                           TextField(
+                             decoration: InputDecoration(
+                               disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                               prefixIcon:Icon(Icons.email,color:Colors.white),
+                               labelText:snapshot.data.data.userData.email,
+                               labelStyle:TextStyle(color:Colors.white),
+                             ),
+                             enabled: false,
+                           ),
+                           SizedBox(height: 13.0),
+                           TextField(
+                             decoration: InputDecoration(
+                               disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                               prefixIcon:Icon(Icons.phone_android,color:Colors.white),
+                               labelText:snapshot.data.data.userData.phoneNo,
+                               labelStyle:TextStyle(color:Colors.white),
+                             ),
+                             enabled: false,
+                           ),
+                           SizedBox(height: 13.0),
+                           TextField(
+                             decoration: InputDecoration(
+                               disabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                               prefixIcon:Icon(Icons.cake,color:Colors.white),
+                               labelText:snapshot.data.data.userData.dob!=null?snapshot.data.data.userData.dob:'Edit your DoB',
+                               labelStyle:TextStyle(color:Colors.white),
+                             ),
+                             enabled: false,
+                           ),
+                           SizedBox(height: 20.0),
+                           Container(
+                             height:47,
+                             width:double.infinity,
+                             child: RaisedButton(
+                               onPressed: (){
+                                 Navigator.push(context,MaterialPageRoute(builder:(context) => EditProfile())).then((value) => value?getRequest():null);
+                               },
+                               child: Text(
+                                 "EDIT PROFILE",
+                                 style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                               ),
+                               color: Colors.white,
+                               textColor: Colors.red,
+                               splashColor: Colors.red,
+                               shape: RoundedRectangleBorder(
+                                   borderRadius: BorderRadius.circular(6.0),
+                                   side: BorderSide(color: Colors.red)),
+                             ),
+                           ),
+                         ],
                        ),
-                       color: Colors.white,
-                       textColor: Colors.red,
-                       splashColor: Colors.red,
-                       shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(6.0),
-                           side: BorderSide(color: Colors.red)),
                      ),
-                   ),
-                 ],
-               ),
-             );
-           }
-           else{
-             return Center(child: CircularProgressIndicator());
-           }
-          }
-        ),
+                     SizedBox(height:36),
+                     Container(
+                       height: 52.0,
+                       width: double.infinity,
+                       child: RaisedButton(
+                         onPressed: (){
+                           Navigator.push(context,MaterialPageRoute(builder:(context) => ResetPass()));
+                         },
+                         child: Text(
+                           "RESET PASSWORD",
+                           style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),
+                         ),
+                         color: Colors.white,
+                         textColor: Colors.red,
+                         splashColor: Colors.red,
+                         shape: RoundedRectangleBorder(
+                             borderRadius: BorderRadius.circular(6.0),
+                             side: BorderSide(color: Colors.red)),
+                       ),
+                     ),
+                   ],
+                 ),
+               );
+             }
+             else{
+               return Center(child: CircularProgressIndicator());
+             }
+            }
+          ),
 
+        ),
       ),
     );
   }

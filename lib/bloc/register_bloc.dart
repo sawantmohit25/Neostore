@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:neostore_app/model_classes/usermodel.dart';
 
 class RegisterBloc{
-  final stateStreamController=StreamController<String>();
+  final stateStreamController= StreamController<String>.broadcast();
   StreamSink<String> get registerSink =>stateStreamController.sink;
   Stream<String> get registerStream =>stateStreamController.stream;
   var statusCode;

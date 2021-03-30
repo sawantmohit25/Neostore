@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:neostore_app/model_classes/usermodel.dart';
 class ForgotPassBloc{
-  final stateStreamController=StreamController<String>();
+  final stateStreamController=StreamController<String>.broadcast();
   StreamSink<String> get forgotSink =>stateStreamController.sink;
   Stream<String> get forgotStream =>stateStreamController.stream;
   var statusCode;

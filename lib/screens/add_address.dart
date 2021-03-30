@@ -231,7 +231,6 @@ class _AddAddressState extends State<AddAddress> {
                           );
                         }
                         if(addAddressObj.statusCode==200) {
-                          // if(snapshot.data=='Logged In successfully')
                           Future.delayed(
                               const Duration(seconds: 1), () {
                             Navigator.pop(context,true);

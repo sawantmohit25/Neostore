@@ -25,10 +25,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController confirmPasswordContr = TextEditingController();
   TextEditingController phoneNoContr = TextEditingController();
   String gender1;
-  bool isValidateRadio1 =false,checkValue=false,hiddenValue=true,hiddenValue1=true;
+  bool isValidateRadio1 =false,checkValue=false,hiddenValue=true,hiddenValue1=true,isLoading=false;
   final registerObj = RegisterBloc();
   final _formKey = GlobalKey<FormState>();
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  progressState(){
+    registerObj.registerStream.listen((event) {
+      if(event.isNotEmpty){
+        Fluttertoast.showToast(
+            msg:event,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.white,
+            textColor: Colors.red
+        );
+        if (registerObj.statusCode == 200) {
+          setState(() {
+            isLoading=false;
+          });
+          //if(snapshot.data=='Registration successful')
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pop(context);
+          });
+        }
+        else{
+          setState(() {
+            isLoading=false;
+          });
+        }
+      }
+    });
+  }
   String validatePhone(val) {
     if (val.isEmpty) {
       return 'Required';
@@ -399,7 +426,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       //     color: Colors.white),),
                     ],
                   ),
-                    Container(
+                    isLoading==false?Container(
                       height: 47.0,
                       width: 293.0,
                       child: RaisedButton(
@@ -413,6 +440,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
                             if(_formKey.currentState.validate()) {
                                 if(gender1!=null && checkValue==true){
+                                  setState(() {
+                                    isLoading=true;
+                                  });
                                   final String firstName=firstNameContr.text;
                                   final String lastName=lastNameContr.text;
                                   final String email=emailContr.text;
@@ -421,6 +451,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   final String gender=gender1;
                                   final String phoneNo=phoneNoContr.text;
                                   registerObj.postData(firstName, lastName, email, password, confirmPassword, gender, phoneNo);
+                                  progressState();
                                   }
                             }
                         },
@@ -431,28 +462,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             borderRadius: BorderRadius.circular(6.0),
                             side: BorderSide(color: Colors.red)),
                       ),
-                    ),
-                  StreamBuilder<String>(
-                      stream: registerObj.registerStream,
-                      builder: (context, snapshot) {
-                        if(snapshot.data!=null) {
-                          Fluttertoast.showToast(
-                              msg: snapshot.data,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.red
-                          );
-                          if (registerObj.statusCode == 200) {
-                            //if(snapshot.data=='Registration successful')
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.pop(context);
-                            });
-                          }
-                        }
-                        //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
-                        return Text('');
-                      }),
+                    ):CircularProgressIndicator(),
+                  // StreamBuilder<String>(
+                  //     stream: registerObj.registerStream,
+                  //     builder: (context, snapshot) {
+                  //       if(snapshot.data!=null) {
+                  //         Fluttertoast.showToast(
+                  //             msg: snapshot.data,
+                  //             toastLength: Toast.LENGTH_SHORT,
+                  //             gravity: ToastGravity.BOTTOM,
+                  //             backgroundColor: Colors.white,
+                  //             textColor: Colors.red
+                  //         );
+                  //         if (registerObj.statusCode == 200) {
+                  //           //if(snapshot.data=='Registration successful')
+                  //           Future.delayed(const Duration(seconds: 1), () {
+                  //             Navigator.pop(context);
+                  //           });
+                  //         }
+                  //       }
+                  //       //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                  //       return Text('');
+                  //     }),
                   ],
               ),
             ),

@@ -14,7 +14,7 @@ class _ResetPassState extends State<ResetPass> {
   final _formKey = GlobalKey<FormState>();
   final resetObj= ResetBloc();
   String accessToken;
-  bool navError=false;
+  bool navError=false,isLoading=false;
   TextEditingController currPasswordContr = TextEditingController();
   TextEditingController newPasswordContr = TextEditingController();
   TextEditingController confirmPasswordContr = TextEditingController();
@@ -188,17 +188,17 @@ class _ResetPassState extends State<ResetPass> {
                         cursorColor: Colors.white,
                       ),
                       SizedBox(height: 13.0),
-                      Container(
+                      isLoading==false?Container(
                         height:47,
                         width:double.infinity,
                         child: RaisedButton(
                           onPressed: (){
                             print('hi${accessToken}');
-                            setState(() {
-                              navError=true;
-                            });
                             if(_formKey.currentState.validate()) {
-
+                              setState(() {
+                                navError=true;
+                                isLoading=!isLoading;
+                              });
                               final String currentPassword=currPasswordContr.text;
                               final String newPassword=newPasswordContr.text;
                               final String confirmPassword=confirmPasswordContr.text;
@@ -218,7 +218,7 @@ class _ResetPassState extends State<ResetPass> {
                               borderRadius: BorderRadius.circular(6.0),
                               side: BorderSide(color: Colors.red)),
                         ),
-                      ),
+                      ):CircularProgressIndicator(),
                       navError==true?
                       StreamBuilder<String>(
                           stream: resetObj.resetStream,

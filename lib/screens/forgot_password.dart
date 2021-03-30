@@ -16,8 +16,36 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
   final forgotObj = ForgotPassBloc();
+  bool isLoading=false;
   TextEditingController userName = TextEditingController();
-
+  progressState(){
+    forgotObj.forgotStream.listen((event) {
+      if(event.isNotEmpty){
+          Fluttertoast.showToast(
+              msg:event,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: Colors.red
+          );
+          if(forgotObj.statusCode==200) {
+            setState(() {
+              isLoading=false;
+            });
+            // if(snapshot.data=='New password sent on email')
+            Future.delayed(
+                const Duration(seconds: 1), () {
+              Navigator.pop(context);
+            });
+          }
+          else{
+            setState(() {
+              isLoading=false;
+            });
+          }
+      }
+    });
+  }
   String validateUserName(val) {
     if (val.isEmpty) {
       return 'Required';
@@ -121,8 +149,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    isLoading=true;
+                                  });
                                   final String email = userName.text;
                                   forgotObj.postData(email);
+                                  progressState();
                                   // Future postData(String email) async {
                                   //   final String url = 'http://staging.php-dev.in:8844/trainingapp/api/users/forgot';
                                   //   final response = await http.post(url, body: {
@@ -174,29 +206,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   side: BorderSide(color: Colors.red)),
                             ),
                           ),
-                          StreamBuilder<String>(
-                                  stream: forgotObj.forgotStream,
-                                  builder: (context, snapshot) {
-                                    if(snapshot.data!=null)
-                                    {
-                                    Fluttertoast.showToast(
-                                        msg:snapshot.data,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.white,
-                                        textColor: Colors.red
-                                    );
-                                    if(forgotObj.statusCode==200) {
-                                      // if(snapshot.data=='New password sent on email')
-                                      Future.delayed(
-                                          const Duration(seconds: 1), () {
-                                        Navigator.pop(context);
-                                      });
-                                    }
-                                    }
-                                    //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
-                                    return Text('');
-                                  })
+                          // StreamBuilder<String>(
+                          //         stream: forgotObj.forgotStream,
+                          //         builder: (context, snapshot) {
+                          //           if(snapshot.data!=null)
+                          //           {
+                          //           Fluttertoast.showToast(
+                          //               msg:snapshot.data,
+                          //               toastLength: Toast.LENGTH_SHORT,
+                          //               gravity: ToastGravity.BOTTOM,
+                          //               backgroundColor: Colors.white,
+                          //               textColor: Colors.red
+                          //           );
+                          //           if(forgotObj.statusCode==200) {
+                          //             // if(snapshot.data=='New password sent on email')
+                          //             Future.delayed(
+                          //                 const Duration(seconds: 1), () {
+                          //               Navigator.pop(context);
+                          //             });
+                          //           }
+                          //           }
+                          //           //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                          //           return Text('');
+                          //         })
                         ],
                       ),
                     ),

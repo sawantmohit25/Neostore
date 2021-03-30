@@ -48,6 +48,12 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController phoneNoContr = TextEditingController();
   TextEditingController dobContr = TextEditingController();
 
+  String validateDob(val){
+    if (val.isEmpty) {
+      return 'Required';
+    }
+    return null;
+  }
 
   String validateLastName(val) {
     if (val.isEmpty) {
@@ -245,6 +251,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             keyboardType: TextInputType.datetime,
                             controller:dobContr,
+                            validator:validateDob,
                             style: TextStyle(color: Colors.white),
                             cursorColor: Colors.white,
                             onTap: ()async{

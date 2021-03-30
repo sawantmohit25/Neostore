@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     setState(() {
       getUserData().whenComplete(() async {
-        Timer(Duration(seconds:2), ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> finalEmail == null ? LoginScreen():HomeScreen())));
+        Timer(Duration(seconds:2), ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> finalEmail == null ? LoginScreen():HomeScreen())));
     });
     });
 

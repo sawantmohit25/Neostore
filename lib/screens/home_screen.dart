@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => TableList()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TableList())).then((value)=>value?getRequest():null);
                   },
                   child: Container(
                     color: myHexColor1,
