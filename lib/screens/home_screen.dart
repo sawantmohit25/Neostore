@@ -32,12 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
   getData() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      firstName=prefs.getString("key1");
-      print('Driver ${firstName}');
-      lastName=prefs.getString("key2");
-      email=prefs.getString("key3");
-      profilePic=prefs.getString("key8");
-      accessToken=prefs.getString("key7");
+      firstName=prefs.getString("firstName");
+      lastName=prefs.getString("lastName");
+      email=prefs.getString("email");
+      profilePic=prefs.getString("profilePic");
+      accessToken=prefs.getString("accessToken");
       count=prefs.getString('count');
     });
     myCartObj1.myCartStream.listen((myCartModel) {

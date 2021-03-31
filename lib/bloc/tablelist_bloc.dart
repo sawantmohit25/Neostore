@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:neostore_app/model_classes/productmodel.dart';
 class TableListBloc{
+  var responseStatus;
   final stateStreamController=StreamController<ProductList>.broadcast();
-  StreamSink<ProductList> get loginSink =>stateStreamController.sink;
-  Stream<ProductList> get loginStream =>stateStreamController.stream;
+  StreamSink<ProductList> get tableSink =>stateStreamController.sink;
+  Stream<ProductList> get tableStream =>stateStreamController.stream;
    getData(int pageNumber) async{
     var endpointUrl = 'http://staging.php-dev.in:8844/trainingapp/api/products/getList';
     Map<String,String> queryParams = {
@@ -19,7 +20,11 @@ class TableListBloc{
     var body=json.decode(res.body);
     if(res.statusCode==200){
       ProductList proList=ProductList.fromJson(body);
-      loginSink.add(proList);
+      responseStatus=res.statusCode;
+      tableSink.add(proList);
+    }
+    else{
+      responseStatus=res.statusCode;
     }
   }
   void dispose(){

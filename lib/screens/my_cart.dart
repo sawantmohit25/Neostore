@@ -39,7 +39,7 @@ class _MyCartState extends State<MyCart> {
   getAccessToken() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      accessToken=prefs.getString("key7");
+      accessToken=prefs.getString("accessToken");
     });
      myCartObj.getData(accessToken);
   }

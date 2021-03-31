@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neostore_app/bloc/tablelist_bloc.dart';
 import 'package:neostore_app/model_classes/productmodel.dart';
 import 'package:http/http.dart' as http;
@@ -20,21 +21,45 @@ class _TableListState extends State<TableList> {
   TextEditingController searchController=TextEditingController();
   List<Data> postList=List();
   List<Data> tablesForDisplay=List();
+
   Future<bool> onBackPressed() async{
     Navigator.pop(context,true);
     return true;
   }
+
   @override
   void initState() {
     tableObj.getData(pageNumber);
     _scrollController.addListener(() {
       if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
-        tableObj.getData(++pageNumber);
+        if(tableObj.responseStatus==200){
+          print(tableObj.responseStatus);
+          tableObj.getData(++pageNumber);
+        }
+        else{
+          Fluttertoast.showToast(
+              msg:'No More Items Further',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white
+          );
+        }
       }
-      // else if(_scrollController.position.pixels==_scrollController.position.minScrollExtent){
-      //   tableObj.getData(--pageNumber);
-      // }
       });
+    tableObj.tableStream.listen((event) {
+      if(event.data!=null){
+        setState(() {
+          postList.addAll(event.data);
+          tablesForDisplay=postList;
+        });
+
+      }
+      else{
+        return CircularProgressIndicator();
+      }
+
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -67,16 +92,18 @@ class _TableListState extends State<TableList> {
       onWillPop:onBackPressed,
       child: Scaffold(
         appBar:AppBar(
-          title:isSearching==false?Text('Tables'):TextField(style:TextStyle(color: Colors.white),decoration: InputDecoration(icon:Icon(Icons.search,color: Colors.white,),hintText: 'Search Tables Here',hintStyle: TextStyle(color:Colors.white)),
-              onChanged:(text){
-            text=text.toLowerCase();
-            setState(() {
-              tablesForDisplay=postList.where((element){
-                var tables=element.name.toLowerCase();
-                return tables.contains(text);
-              }).toList();
-            });
-              }),
+          title:isSearching==false?Text('Tables'):Theme(data: ThemeData(primaryColor: Colors.white,),
+            child: TextField(cursorColor:Colors.white,style:TextStyle(color: Colors.white),decoration: InputDecoration(icon:Icon(Icons.search,color: Colors.white,),hintText: 'Search Tables Here',hintStyle: TextStyle(color:Colors.white)),
+                onChanged:(text){
+              text=text.toLowerCase();
+              setState(() {
+                tablesForDisplay=postList.where((element){
+                  var tables=element.name.toLowerCase();
+                  return tables.contains(text);
+                }).toList();
+              });
+                }),
+          ),
           centerTitle: true,
           elevation: 0.0,
           backgroundColor: myHexColor,
@@ -98,6 +125,7 @@ class _TableListState extends State<TableList> {
               onPressed: () {
                 setState(() {
                   isSearching=false;
+                  tablesForDisplay=postList;
                 });
               },
               icon: Icon(Icons.cancel),
@@ -105,13 +133,7 @@ class _TableListState extends State<TableList> {
           ],
         ),
         body:Container(
-          child:StreamBuilder<ProductList>(
-            stream:tableObj.loginStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                postList.addAll(snapshot.data.data);
-                tablesForDisplay=postList;
-                return ListView.builder(controller:_scrollController,physics:BouncingScrollPhysics(),itemBuilder: (context, index) {
+          child:ListView.builder(controller:_scrollController,physics:BouncingScrollPhysics(),itemBuilder: (context, index) {
                   return Column(
                     children: [
                       Container(
@@ -120,7 +142,7 @@ class _TableListState extends State<TableList> {
                           padding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
                           child: ListTile(
                             onTap: (){
-                              Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed(id: postList[index].id,productImage:postList[index].productImages,appTitle:postList[index].name,initialRate: postList[index].rating,)));
+                              Navigator.push(context,MaterialPageRoute(builder:(context) =>ProductDetailed(id: tablesForDisplay[index].id,productImage:tablesForDisplay[index].productImages,appTitle:tablesForDisplay[index].name,initialRate: tablesForDisplay[index].rating,)));
                             },
                             leading: Container(child: Image.network(
                                 tablesForDisplay[index].productImages),
@@ -156,17 +178,7 @@ class _TableListState extends State<TableList> {
                     ],
                   );
                 },
-                  itemCount: tablesForDisplay.length,);
-              }
-              else{
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor:AlwaysStoppedAnimation<Color>(Colors.red),
-                  ),
-                );
-              }
-            }
-          )
+                  itemCount: tablesForDisplay.length,),
         ),
       ),
     );

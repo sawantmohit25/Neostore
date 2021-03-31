@@ -29,7 +29,7 @@ class _MyAccountState extends State<MyAccount> {
   getAccessToken() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      accessToken=prefs.getString("key7");
+      accessToken=prefs.getString("accessToken");
     });
     fetchDetailsObj.getData(accessToken);
   }

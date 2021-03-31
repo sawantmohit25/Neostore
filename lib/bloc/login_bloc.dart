@@ -31,14 +31,14 @@ class LoginBloc{
       SharedPreferences loginData = await SharedPreferences.getInstance();
       loginData.setString('login',email);
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("key1",success.data.firstName);
-      prefs.setString('key2',success.data.lastName);
-      prefs.setString('key3',success.data.email);
+      prefs.setString("firstName",success.data.firstName);
+      prefs.setString('lastName',success.data.lastName);
+      prefs.setString('email',success.data.email);
       // prefs.setString('key4',success.data.profilePic);
-      prefs.setString('key5',success.data.phoneNo);
-      prefs.setString('key6',success.data.dob);
-      prefs.setString("key7",success.data.accessToken);
-      prefs.setString("key8",success.data.profilePic);
+      prefs.setString('phoneNo',success.data.phoneNo);
+      prefs.setString('dob',success.data.dob);
+      prefs.setString("accessToken",success.data.accessToken);
+      prefs.setString("profilePic",success.data.profilePic);
       print('mohit ${success.data.firstName}');
       loginSink.add(success.userMsg);
     }

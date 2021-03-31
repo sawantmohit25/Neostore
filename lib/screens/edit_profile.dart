@@ -32,13 +32,13 @@ class _EditProfileState extends State<EditProfile> {
   getData() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      firstNameContr.text=prefs.getString("key1");
-      lastNameContr.text=prefs.getString("key2");
-      emailContr.text=prefs.getString("key3");
-      phoneNoContr.text=prefs.getString("key5");
-      dobContr.text=prefs.getString("key6");
-      accessToken=prefs.getString("key7");
-      profilePic=prefs.getString("key8");
+      firstNameContr.text=prefs.getString("firstName");
+      lastNameContr.text=prefs.getString("lastName");
+      emailContr.text=prefs.getString("email");
+      phoneNoContr.text=prefs.getString("phoneNo");
+      dobContr.text=prefs.getString("dob");
+      accessToken=prefs.getString("accessToken");
+      profilePic=prefs.getString("profilePic");
       print('hello${accessToken}');
     });
   }
@@ -100,248 +100,251 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:myHexColor1,
-      appBar:AppBar(
-        title: Text('Edit Profile'),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: myHexColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_sharp),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop:onBackPressed,
+      child: Scaffold(
+        backgroundColor:myHexColor1,
+        appBar:AppBar(
+          title: Text('Edit Profile'),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: myHexColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp),
+            onPressed: () {
+              Navigator.pop(context,true);
+            },
+          ),
         ),
-      ),
-      body:SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Padding(
-                padding:EdgeInsets.fromLTRB(33.0,0,33.0,0),
-                child:Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: 133.0,
-                            height:133.0,
-                            decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
-                            child: profilePic==null && _image==null?
-                            Container(child:Center(child:firstNameContr.text.isNotEmpty?Text(firstNameContr.text[0]+lastNameContr.text[0],textAlign:TextAlign.center,style: TextStyle(fontSize:40,color: Colors.red),):Text('')),):
-                            Container(decoration:BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(image:_image!=null?FileImage(File(_image.path)): NetworkImage(profilePic),
-                                  fit: BoxFit.fill),),
-                            )
-                          ),
-                          onTap:(){
-                            pickImage();
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Form(
-                      key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child:Column(
+        body:SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                Padding(
+                  padding:EdgeInsets.fromLTRB(33.0,0,33.0,0),
+                  child:Column(
+                    children: [
+                      SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
-                            border: OutlineInputBorder(),
-                            errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                            focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                            hintText:'First Name',
-                            errorStyle: TextStyle(color: Colors.white),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
-                            hintStyle:TextStyle(color:Colors.white),
-                            prefixIcon:Icon(Icons.person,color:Colors.white),
+                          InkWell(
+                            child: Container(
+                              width: 133.0,
+                              height:133.0,
+                              decoration:BoxDecoration(shape: BoxShape.circle,color: Colors.white),
+                              child: profilePic==null && _image==null?
+                              Container(child:Center(child:firstNameContr.text.isNotEmpty?Text(firstNameContr.text[0]+lastNameContr.text[0],textAlign:TextAlign.center,style: TextStyle(fontSize:40,color: Colors.red),):Text('')),):
+                              Container(decoration:BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(image:_image!=null?FileImage(File(_image.path)): NetworkImage(profilePic),
+                                    fit: BoxFit.fill),),
+                              )
+                            ),
+                            onTap:(){
+                              pickImage();
+                            },
                           ),
-                            controller: firstNameContr,
-                            validator:validateFirstName,
-                            keyboardType: TextInputType.name,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                          ),
-                          SizedBox(height: 13.0),
-                          TextFormField(decoration: InputDecoration(
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child:Column(
+                          children: [
+                            TextFormField(decoration: InputDecoration(
                               enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                               border: OutlineInputBorder(),
                               errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
                               focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                              hintText: 'Last Name',
+                              hintText:'First Name',
                               errorStyle: TextStyle(color: Colors.white),
                               contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
                               hintStyle:TextStyle(color:Colors.white),
-                              prefixIcon:Icon(Icons.person,color: Colors.white,)),
-                            controller: lastNameContr,
-                            validator: validateLastName,
-                            keyboardType: TextInputType.name,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                          ),
-                          SizedBox(height: 13.0),
-                          TextFormField(decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
-                            border: OutlineInputBorder(),
-                            errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                            focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                            hintText: 'Email',
-                            errorStyle: TextStyle(color: Colors.white),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
-                            prefixIcon:Icon(Icons.email,color: Colors.white,),
-                            hintStyle:TextStyle(color:Colors.white),),
-                            controller: emailContr,
-                            validator: validateEmail,
-                            keyboardType: TextInputType.emailAddress,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                          ),
-                          SizedBox(height: 13.0),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide:
-                                const BorderSide(color: Colors.white, width: 0.0),
-                              ),
+                              prefixIcon:Icon(Icons.person,color:Colors.white),
+                            ),
+                              controller: firstNameContr,
+                              validator:validateFirstName,
+                              keyboardType: TextInputType.name,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                            ),
+                            SizedBox(height: 13.0),
+                            TextFormField(decoration: InputDecoration(
+                                enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
+                                border: OutlineInputBorder(),
+                                errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                                focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                hintText: 'Last Name',
+                                errorStyle: TextStyle(color: Colors.white),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
+                                hintStyle:TextStyle(color:Colors.white),
+                                prefixIcon:Icon(Icons.person,color: Colors.white,)),
+                              controller: lastNameContr,
+                              validator: validateLastName,
+                              keyboardType: TextInputType.name,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                            ),
+                            SizedBox(height: 13.0),
+                            TextFormField(decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.white, width: 0.0),),
                               border: OutlineInputBorder(),
                               errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
                               focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                              hintText: 'Phone Number',
+                              hintText: 'Email',
                               errorStyle: TextStyle(color: Colors.white),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 5.0),
-                              hintStyle: TextStyle(color: Colors.white),
-                              prefixIcon:
-                              Icon(Icons.phone_android, color: Colors.white),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
+                              prefixIcon:Icon(Icons.email,color: Colors.white,),
+                              hintStyle:TextStyle(color:Colors.white),),
+                              controller: emailContr,
+                              validator: validateEmail,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
                             ),
-                            keyboardType: TextInputType.number,
-                            controller: phoneNoContr,
-                            validator: validatePhone,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                          ),
-                          SizedBox(height: 13.0),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide:
-                                const BorderSide(color: Colors.white, width: 0.0),
+                            SizedBox(height: 13.0),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide:
+                                  const BorderSide(color: Colors.white, width: 0.0),
+                                ),
+                                border: OutlineInputBorder(),
+                                errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                                focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                hintText: 'Phone Number',
+                                errorStyle: TextStyle(color: Colors.white),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5.0),
+                                hintStyle: TextStyle(color: Colors.white),
+                                prefixIcon:
+                                Icon(Icons.phone_android, color: Colors.white),
                               ),
-                              border: OutlineInputBorder(),
-                              errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
-                              focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
-                              hintText: 'DOB',
-                              errorStyle: TextStyle(color: Colors.white),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 5.0),
-                              hintStyle: TextStyle(color: Colors.white),
-                              prefixIcon:
-                              Icon(Icons.cake, color: Colors.white),
+                              keyboardType: TextInputType.number,
+                              controller: phoneNoContr,
+                              validator: validatePhone,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
                             ),
-                            keyboardType: TextInputType.datetime,
-                            controller:dobContr,
-                            validator:validateDob,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                            onTap: ()async{
-                              // DateTime date = DateTime(1900);
-                              FocusScope.of(context).requestFocus(new FocusNode());
+                            SizedBox(height: 13.0),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide:
+                                  const BorderSide(color: Colors.white, width: 0.0),
+                                ),
+                                border: OutlineInputBorder(),
+                                errorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),) ,
+                                focusedErrorBorder:OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.0),),
+                                hintText: 'DOB',
+                                errorStyle: TextStyle(color: Colors.white),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5.0),
+                                hintStyle: TextStyle(color: Colors.white),
+                                prefixIcon:
+                                Icon(Icons.cake, color: Colors.white),
+                              ),
+                              keyboardType: TextInputType.datetime,
+                              controller:dobContr,
+                              validator:validateDob,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              onTap: ()async{
+                                // DateTime date = DateTime(1900);
+                                FocusScope.of(context).requestFocus(new FocusNode());
 
-                              DateTime date = await showDatePicker(context: context,
-                                  initialDate:DateTime.now(),
-                                  firstDate:DateTime(1900),
-                                  lastDate: DateTime(2022),
-                              );
+                                DateTime date = await showDatePicker(context: context,
+                                    initialDate:DateTime.now(),
+                                    firstDate:DateTime(1900),
+                                    lastDate: DateTime(2022),
+                                );
 
-                              String formatDate= DateFormat("dd-MM-yyyy").format(date);
-                              dobContr.text =formatDate;
-                            },
-                          ),
-                          SizedBox(height: 13.0),
-                          isLoading==false?Container(
-                            height:47,
-                            width:double.infinity,
-                            child: RaisedButton(
-                              onPressed: (){
-                                if(_formKey.currentState.validate()) {
-                                  setState(() {
-                                    navError=true;
-                                    isLoading=!isLoading;
-                                  });
-                                  final String firstName=firstNameContr.text;
-                                  final String lastName=lastNameContr.text;
-                                  final String email=emailContr.text;
-                                  final String phoneNo=phoneNoContr.text;
-                                  final String dob=dobContr.text;
-                                  String img=base64Image;
-                                  if(img==null){
-                                    img='';
-                                    editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
-                                  }
-                                  else{
-                                    img="data:image/jpg;base64,"+img;
-                                    editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
-                                  }
-                                }
+                                String formatDate= DateFormat("dd-MM-yyyy").format(date);
+                                dobContr.text =formatDate;
                               },
-                              child: Text(
-                                "SUBMIT",
-                                style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
-                              ),
-                              color: Colors.white,
-                              textColor: Colors.red,
-                              splashColor: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  side: BorderSide(color: Colors.red)),
                             ),
-                          ):CircularProgressIndicator(),
-                          navError==true?
-                          StreamBuilder<String>(
-                              stream: editObj.editStream,
-                              builder: (context, snapshot) {
-                                if(snapshot.data!=null)
-                                {
-                                  navError=false;
-                                  Fluttertoast.showToast(
-                                      msg:snapshot.data,
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.white,
-                                      textColor: Colors.red
-                                  );
-                                  if(editObj.statusCode==200) {
-                                    // if(snapshot.data=='Logged In successfully')
-                                    Future.delayed(
-                                        const Duration(seconds: 1), () {
-                                          Navigator.pop(context,true);
-                                      // Navigator.pushReplacement(
-                                      //     context,
-                                      //     MaterialPageRoute(builder: (context) =>
-                                      //         MyAccount()));
+                            SizedBox(height: 13.0),
+                            isLoading==false?Container(
+                              height:47,
+                              width:double.infinity,
+                              child: RaisedButton(
+                                onPressed: (){
+                                  if(_formKey.currentState.validate()) {
+                                    setState(() {
+                                      navError=true;
+                                      isLoading=!isLoading;
                                     });
+                                    final String firstName=firstNameContr.text;
+                                    final String lastName=lastNameContr.text;
+                                    final String email=emailContr.text;
+                                    final String phoneNo=phoneNoContr.text;
+                                    final String dob=dobContr.text;
+                                    String img=base64Image;
+                                    if(img==null){
+                                      img='';
+                                      editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                    }
+                                    else{
+                                      img="data:image/jpg;base64,"+img;
+                                      editObj.postData(firstName,lastName,email,phoneNo,dob,img,accessToken);
+                                    }
                                   }
-                                }
-                                //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
-                                return Text('');
-                              }) :Text(''),
-                        ],
+                                },
+                                child: Text(
+                                  "SUBMIT",
+                                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                                ),
+                                color: Colors.white,
+                                textColor: Colors.red,
+                                splashColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    side: BorderSide(color: Colors.red)),
+                              ),
+                            ):CircularProgressIndicator(),
+                            navError==true?
+                            StreamBuilder<String>(
+                                stream: editObj.editStream,
+                                builder: (context, snapshot) {
+                                  if(snapshot.data!=null)
+                                  {
+                                    navError=false;
+                                    Fluttertoast.showToast(
+                                        msg:snapshot.data,
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.white,
+                                        textColor: Colors.red
+                                    );
+                                    if(editObj.statusCode==200) {
+                                      // if(snapshot.data=='Logged In successfully')
+                                      Future.delayed(
+                                          const Duration(seconds: 1), () {
+                                            Navigator.pop(context,true);
+                                        // Navigator.pushReplacement(
+                                        //     context,
+                                        //     MaterialPageRoute(builder: (context) =>
+                                        //         MyAccount()));
+                                      });
+                                    }
+                                  }
+                                  //WidgetsBinding.instance.addPostFrameCallback((_) =>Scaffold.of(context).showSnackBar(getSnackBar(snapshot.data)) );
+                                  return Text('');
+                                }) :Text(''),
+                          ],
+                        )
                       )
-                    )
-                  ],
-                ))
-            ],
+                    ],
+                  ))
+              ],
+            ),
           ),
         ),
       ),
@@ -354,5 +357,10 @@ class _EditProfileState extends State<EditProfile> {
       List<int> imageBytes =  _image.readAsBytesSync();
       base64Image = base64Encode(imageBytes);
     });
+  }
+
+  Future<bool> onBackPressed() async{
+    Navigator.pop(context,true);
+    return true;
   }
 }

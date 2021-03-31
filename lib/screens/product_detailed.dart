@@ -48,7 +48,7 @@ class _ProductDetailedState extends State<ProductDetailed> {
   getAccessToken() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      accessToken=prefs.getString("key7");
+      accessToken=prefs.getString("accessToken");
     });
   }
 
