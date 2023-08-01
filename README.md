@@ -1,3 +1,5 @@
+Neostore
+
 This project is an E-Commerce application developed using flutter and REST API.
 
 - [Design Reference](http://design.neosofttech.in/35/NeoSoft/NeoSTORE/Guideline_1.html)
